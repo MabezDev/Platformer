@@ -7,4 +7,5 @@ public class Variables {
 
     public static float WIDTH = 800;
     public static float HEIGHT = 600;
+    public static final String NAME = "SPACE2D";
 }
