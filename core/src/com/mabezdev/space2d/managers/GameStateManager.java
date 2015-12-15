@@ -20,7 +20,6 @@ public class GameStateManager {
 
     public State currentState;
     private BaseState state;
-    private ResourceManager myResourceManager = new ResourceManager();
     protected OrthographicCamera camera;
 
     public GameStateManager(OrthographicCamera camera) {
