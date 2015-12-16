@@ -6,7 +6,7 @@ import com.mabezdev.space2d.managers.GameStateManager;
 import com.mabezdev.space2d.managers.ResourceManager;
 import com.mabezdev.space2d.tiles.Tile;
 import com.mabezdev.space2d.util.Log;
-import com.mabezdev.space2d.world.Map;
+import com.mabezdev.space2d.world.MapLoader;
 import com.mabezdev.space2d.world.MapGenerator;
 
 import java.io.IOException;
@@ -17,13 +17,13 @@ import java.io.IOException;
 public class PlayState extends BaseState {
 
     protected static final float unitScale = 1/32f;
-    private Map world;
+    private MapLoader mapLoaderLoader;
     private MapGenerator mapGenerator;
     private String worldFile = "world.txt";
     private SpriteBatch sb;
     private static int ROWS;
     private static int COLUMNS;
-    private Tile[][] GRID;
+    private Tile[][] world;
 
     public PlayState(GameStateManager gsm) {
         super(gsm);
@@ -32,13 +32,13 @@ public class PlayState extends BaseState {
         try {
             mapGenerator = new MapGenerator(worldFile);
             mapGenerator.generateFile();
-            world = new Map(worldFile);
-            GRID = world.getMap();
+            mapLoaderLoader = new MapLoader(worldFile);
+            world = mapLoaderLoader.getMap();
         }catch (IOException e){
             Log.print(e.toString());
         }
-        ROWS = Map.getRows();
-        COLUMNS = Map.getColumns();
+        ROWS = MapLoader.getRows();
+        COLUMNS = MapLoader.getColumns();
 
     }
 
@@ -52,10 +52,10 @@ public class PlayState extends BaseState {
         // we have render the start of our map!
         sb.begin();
         {
-            Log.print(COLUMNS);
+            //draw world
             for (int i = 0; i < ROWS; i++) {
                 for (int j = 0; j < COLUMNS; j++) {
-                    GRID[i][j].render(sb);
+                    world[i][j].render(sb);
                 }
             }
         }

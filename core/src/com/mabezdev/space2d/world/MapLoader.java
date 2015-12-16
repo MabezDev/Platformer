@@ -14,7 +14,7 @@ import java.util.Scanner;
 /**
  * Created by Mabez on 15/12/2015.
  */
-public class Map {
+public class MapLoader {
 
     private float WIDTH;
     private float HEIGHT;
@@ -25,7 +25,24 @@ public class Map {
     private static int COLUMNS;
     private static Scanner reader;
 
-    public Map(String path) throws IOException{
+    //Tile type with id's setups
+    private enum TILES{
+
+        GRASS(0),
+        DIRT(1);
+
+        private int id;
+
+        private TILES(int id){
+            this.id = id;
+        }
+
+        public int getId(){
+            return id;
+        }
+    }
+
+    public MapLoader(String path) throws IOException{
         this.path = path;
         reader = new Scanner(new File(Gdx.files.getLocalStoragePath()+path));
         lines = getLines();
@@ -50,7 +67,9 @@ public class Map {
         for(int i = 0; i < ROWS;i++){
             for(int j= 0;j < COLUMNS;j++){
                 int tile = GRID[i][j];
-                if(tile == 1){
+                //choose tile based on ID
+                //improve efficiency by loadng one of each object then reusing it instead of a new object for each tile?
+                if(tile == TILES.DIRT.getId()){
                     tempTiles[i][j] = new DirtTile(j* Variables.TILEWIDTH,i*Variables.TILEHEIGHT);
                 }
             }
