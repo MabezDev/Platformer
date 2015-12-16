@@ -1,15 +1,14 @@
 package com.mabezdev.space2d.world;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.mabezdev.space2d.Variables;
+import com.mabezdev.space2d.tiles.DirtTile;
+import com.mabezdev.space2d.tiles.Tile;
 import com.mabezdev.space2d.util.Log;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -21,6 +20,7 @@ public class Map {
     private float HEIGHT;
     private static int[][] GRID;
     private static String path;
+    private static String[] lines;
     private static int ROWS;
     private static int COLUMNS;
     private static Scanner reader;
@@ -28,57 +28,57 @@ public class Map {
     public Map(String path) throws IOException{
         this.path = path;
         reader = new Scanner(new File(Gdx.files.getLocalStoragePath()+path));
+        lines = getLines();
         ROWS = getRows();
-        COLUMNS = getColumns()/2;
-        //divide by two as once the commas are removed half the size will be left
-        Log.print(ROWS);
-        Log.print(COLUMNS);
+        COLUMNS = getUnprocessedColumns()/2;
         GRID = new int[ROWS][COLUMNS];
+        loadMap();
     }
 
-    public static int[][] getMap() throws IOException{
-        String[] lines = getLines();
-        reader.close();
-        Log.print(lines);
+    private static void loadMap() throws IOException{
         for(int i = 0; i < ROWS;i++){
             String[] separated = lines[i].split(",");
             for(int j= 0;j < COLUMNS;j++){
                 GRID[i][j] = Integer.parseInt(separated[j]);
             }
         }
-        return GRID;
     }
 
-    private static int getColumns() throws IOException{
-        int columns = 0;
-        if(reader.hasNextLine()) {
-            columns = reader.nextLine().length();
-        }
-        return columns;
-    }
-
-    private static int getRows() throws IOException {
-        int rows = 0;
-        while (reader.hasNextLine()) {
-            rows++;
-            reader.nextLine();
-        }
-        return rows;
-    }
-
-        private static String[] getLines ()throws IOException {
-            String[] lines = new String[ROWS];
-            int index = 0;
-            Log.print(reader.hasNextLine());
-            while (reader.hasNext()) {
-                lines[index] = reader.nextLine().toString();
-                index++;
+    public static Tile[][] getMap(){
+        //compare ints in GRID to TILES to get the Texture
+        Tile[][] tempTiles = new Tile[ROWS][COLUMNS];
+        for(int i = 0; i < ROWS;i++){
+            for(int j= 0;j < COLUMNS;j++){
+                int tile = GRID[i][j];
+                if(tile == 1){
+                    tempTiles[i][j] = new DirtTile(j* Variables.TILEWIDTH,i*Variables.TILEHEIGHT);
+                }
             }
-            return lines;
         }
+        return tempTiles;
+    }
+
+    public static int getRows(){
+        return lines.length;
+    }
+    public static int getColumns(){
+        return COLUMNS;
+    }
+    private static int getUnprocessedColumns(){
+        return lines[0].length();
+    }
+
+    private static String[] getLines ()throws IOException {
+        ArrayList<String> lines1 = new ArrayList<String>();
+        while (reader.hasNextLine()) {
+            lines1.add(reader.nextLine());
+        }
+        reader.close();
+        return lines1.toArray(new String[lines1.size()]);
+    }
 
     public static void dispose() throws IOException {
-        reader.close();
+
     }
 
 }

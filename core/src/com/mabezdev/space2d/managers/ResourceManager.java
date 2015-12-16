@@ -30,7 +30,7 @@ public class ResourceManager {
         return textures.get(key);
     }
 
-    public static void removeTexture(String key){
+    public static void unloadTexture(String key){
         Texture t = textures.get(key);
         if(t!=null){
             t.dispose();
@@ -50,10 +50,11 @@ public class ResourceManager {
         return fonts.get(key);
     }
 
-    public static void removeFont(String key){
+    public static void unloadFont(String key){
         BitmapFont f = fonts.get(key);
         if(f!=null){
             f.dispose();
         }
     }
+
 }

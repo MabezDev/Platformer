@@ -20,6 +20,7 @@ public class Log {
     public static void print(Object toPrint){
         System.out.println(toPrint);
     }
+
     public static void print(String[] toPrint){
         for(int i = 0; i < toPrint.length;i++){
             System.out.println(toPrint[i]);
@@ -35,6 +36,14 @@ public class Log {
             System.out.println(toPrint[i]);
         }
     }
+    public static void print(int[][] toPrint){
+            int lengthJ = toPrint[0].length;
+            for(int i = 0; i < toPrint.length;i++){
+                for(int j = 0; i < lengthJ;i++ ){
+                    System.out.println(toPrint[i][j]);
+                }
+            }
+        }
 
 
 
