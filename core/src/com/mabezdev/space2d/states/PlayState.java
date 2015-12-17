@@ -59,8 +59,8 @@ public class PlayState extends BaseState {
         WORLD_WIDTH = COLUMNS * Variables.TILEWIDTH;
         WORLD_HEIGHT = ROWS * Variables.TILEHEIGHT;
 
-        Log.print(WORLD_WIDTH);
-        Log.print(WORLD_HEIGHT);
+        Variables.WORLD_WIDTH = (WORLD_WIDTH);
+        Variables.WORLD_HEIGHT = (WORLD_HEIGHT);
         entities.add(player);
 
 
@@ -84,25 +84,24 @@ public class PlayState extends BaseState {
         for(int j=0; j < entities.size();j++){
             entities.get(j).update(dt);
         }
-        Log.print(getColumnOfEntity(player)+","+getRowOfEntity(player));
+        //Log.print(getColumnOfEntity(player)+","+getRowOfEntity(player));
+        //Log.print(world[getRowOfEntity(player)][getColumnOfEntity(player)].ID);
         updateCamera();
     }
 
     private int getColumnOfEntity(Entity e){
         float x =  e.getX() - e.ENTITY_WIDTH/2;
-        int nearestX = (int)(Math.floor((x/Variables.TILEWIDTH))) +1;
+        int nearestX = (int)(Math.floor((x/Variables.TILEWIDTH))) + 1;
         return nearestX;
     }
 
     private int getRowOfEntity(Entity e){
         float y =  e.getY() - e.ENTITY_HEIGHT/2;
-        int nearestY = (int) (Math.floor((y/Variables.TILEHEIGHT))) +1;
+        int nearestY = (int) (Math.floor((y/Variables.TILEHEIGHT))) + 1;
         return nearestY;
     }
 
     private void updateCamera(){
-        Vector3 position = this.GSManager.getCamera().position;
-
         float newPosx = player.getX() + (player.ENTITY_WIDTH/2);
         float newPosy = player.getY() + (player.ENTITY_HEIGHT/2);
 
@@ -129,7 +128,7 @@ public class PlayState extends BaseState {
                     world[i][j].render(sb);
                 }
             }
-
+            //draw entities next so they are on top of the world
             for(int j=0; j < entities.size();j++){
                 entities.get(j).render(sb);
             }

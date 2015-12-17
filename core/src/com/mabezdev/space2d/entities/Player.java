@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.mabezdev.space2d.Variables;
 import com.mabezdev.space2d.managers.ResourceManager;
 import com.mabezdev.space2d.util.Log;
 
@@ -38,8 +39,31 @@ public class Player extends Entity {
 
     @Override
     public void update(float dt) {
+
+        //collect user input
         handleInput();
 
+        y += dy * dt;
+        x += dx * dt;
+        //check map bounds an update player position. Very smooth, I might add
+        if(x < 0){
+            x += x*-1;
+        }else if(x > Variables.WORLD_WIDTH  - this.ENTITY_WIDTH) {
+            x -= dx * dt;
+        }
+
+        if(y < 0){
+            y += y * -1;
+        } else if(y > Variables.WORLD_HEIGHT - this.ENTITY_HEIGHT) {
+            y -= dy * dt;
+        }
+
+        //decelerate player with drag
+        handleRetardation();
+    }
+
+
+    private void handleRetardation(){
         //handle retardation
         if(dx !=0){
             if(dx > 0){
@@ -55,9 +79,6 @@ public class Player extends Entity {
                 dy += DEFAULT_RETARDATION;
             }
         }
-
-        x += dx * dt;
-        y += dy * dt;
     }
 
 
@@ -72,9 +93,8 @@ public class Player extends Entity {
         if(Gdx.input.isKeyPressed(Input.Keys.W)){
             this.move(Direction.UP);
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.S)){
+        if(Gdx.input.isKeyPressed(Input.Keys.S)) {
             this.move(Direction.DOWN);
         }
-
     }
 }

@@ -74,8 +74,15 @@ public abstract class Entity {
             default:
                 dx = 0;
                 dy = 0;
+                break;
+
+
+
+
         }
     }
+
+
 
     public abstract void render(SpriteBatch sb);
 

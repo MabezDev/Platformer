@@ -70,7 +70,7 @@ public class MapLoader {
                 //choose tile based on ID
                 //improve efficiency by loadng one of each object then reusing it instead of a new object for each tile?
                 if(tile == TILES.DIRT.getId()){
-                    tempTiles[i][j] = new DirtTile(j* Variables.TILEWIDTH,i*Variables.TILEHEIGHT);
+                    tempTiles[i][j] = new DirtTile(j* Variables.TILEWIDTH,i*Variables.TILEHEIGHT, TILES.DIRT.getId());
                 }
             }
         }

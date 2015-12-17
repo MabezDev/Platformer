@@ -11,4 +11,6 @@ public class Variables {
     public static final float TILEHEIGHT = 32;
     public static final float FPS = 60;
     public static final String NAME = "SPACE2D";
+    public static float WORLD_HEIGHT;
+    public static float WORLD_WIDTH;
 }

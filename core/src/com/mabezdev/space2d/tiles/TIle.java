@@ -7,10 +7,20 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  */
 public abstract class Tile {
 
-    public final int WIDTH = 32;
-    public final int HEIGHT = 32;
+    private boolean isSolid = false;
+    public static int ID;
 
     public abstract void render(SpriteBatch sb);
 
+
+    //only the tile can decide whether is is solid or not,
+    //might have to make this public for things like doors, where is can and cannot be solid
+    protected void setSolid(boolean b){
+        isSolid = b;
+    }
+
+    public boolean isSolid(){
+        return isSolid;
+    }
 
 }
