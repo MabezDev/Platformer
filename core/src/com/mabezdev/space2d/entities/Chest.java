@@ -51,17 +51,16 @@ public class Chest extends StaticEntity {
 
     @Override
     public void doAction(){
-        if(currentState!=chestState.OPEN){
+        isOpen = !isOpen;
+        if(isOpen){
             setState(chestState.OPEN);
+        } else {
+            setState(chestState.CLOSED);
         }
     }
 
     @Override
     public void update(float dt) {
-        if(currentState!=chestState.CLOSED){
-            setState(chestState.CLOSED);
-        }
-
     }
 
     public void setState(chestState b){
