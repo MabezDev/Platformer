@@ -13,4 +13,6 @@ public class Variables {
     public static final String NAME = "SPACE2D";
     public static float WORLD_HEIGHT;
     public static float WORLD_WIDTH;
+    public static int WORLD_ROWS;
+    public static int WORLD_COLUMNS;
 }

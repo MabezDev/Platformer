@@ -6,9 +6,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mabezdev.space2d.Variables;
 import com.mabezdev.space2d.managers.ResourceManager;
+import com.mabezdev.space2d.states.PlayState;
+import com.mabezdev.space2d.tiles.Tile;
 import com.mabezdev.space2d.util.Log;
-
-import javax.print.attribute.standard.MediaSize;
 
 /**
  * Created by Mabez on 14/12/2015.
@@ -18,6 +18,9 @@ public class Player extends Entity {
     private TextureRegion playerImage;
     private boolean Action;
     private float dt;
+    private Tile currentTile;
+    private float tempX;
+    private float tempY;
 
 
     public Player(float x, float y){
@@ -46,12 +49,64 @@ public class Player extends Entity {
         //collect user input
         handleInput();
 
+        tempX = x;
+        tempY = y;
 
-        y += dy * dt;
-        x += dx * dt;
+        tempX += dx * dt;
+        tempY += dy * dt;
+
+        //player and tile collision still needs alot of work
+        Tile next = null;
+        Tile nextY = null;
+        int currentRow = PlayState.getRowOfEntity(this);
+        int currentColumn = PlayState.getColumnOfEntity(this);
+        //check tile to the left
+        if(tempX > (currentTile.getX() + Variables.TILEWIDTH/2)){
+            if(currentColumn < Variables.WORLD_COLUMNS - 1) {
+                next = PlayState.getTile(currentRow, currentColumn + 1);
+            }
+        } else if(tempX < (currentTile.getX() - Variables.TILEWIDTH/2) ){
+            if(currentColumn > 0) {
+                next = PlayState.getTile(currentRow, currentColumn - 1);
+            }
+        } else {
+            x = tempX;
+        }
+
+        if(next!=null){
+            if(next.isSolid()){
+                //don't move
+            } else {
+                Log.print("Updating x");
+                x = tempX;
+            }
+        }
+
+        if(tempY > (currentTile.getY() + Variables.TILEWIDTH/2)) {
+            if(currentRow < Variables.WORLD_ROWS - 1){
+                nextY = PlayState.getTile(currentRow + 1,currentColumn);
+            }
+        } else if(tempY < currentTile.getY()){
+                if(currentRow > 0){
+                    nextY = PlayState.getTile(currentRow - 1,currentColumn);
+                }
+        } else {
+            y = tempY;
+        }
+
+        if(nextY!=null){
+            if(nextY.isSolid()){
+                //don't move
+            } else {
+                Log.print("Updating y");
+                y = tempY;
+            }
+        }
+
+
 
         //check map bounds an update player position. Very smooth, I might add
-        /*if(x < 0){
+        if(x < 0){
             x += x*-1;
         }else if(x > Variables.WORLD_WIDTH  - this.ENTITY_WIDTH) {
             x -= dx * dt;
@@ -61,25 +116,14 @@ public class Player extends Entity {
             y += y * -1;
         } else if(y > Variables.WORLD_HEIGHT - this.ENTITY_HEIGHT) {
             y -= dy * dt;
-        }*/
+        }
 
         //decelerate player with drag
         handleRetardation();
     }
 
-    public void handleCollision(float startx,float endx,float starty, float endy){
-        float dt = this.dt;
-        if(x < startx) {
-            x -= (dx * dt) + dt;
-        } else if( x < endx){
-            x -= (dx * dt) - dt;
-        }
-
-        if(y < starty){
-            y -= (dy * dt) + dt;
-        } else if(y < endy){
-            y -= (dy * dt) - dt;
-        }
+    public void setCurrentTile(Tile t){
+        currentTile = t;
     }
 
 

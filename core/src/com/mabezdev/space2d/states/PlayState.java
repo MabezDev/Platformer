@@ -32,7 +32,7 @@ public class PlayState extends BaseState {
     private static int COLUMNS;
     private static float WORLD_WIDTH;
     private static float WORLD_HEIGHT;
-    private Tile[][] world;
+    private static Tile[][] world;
     private ArrayList<Entity> entities;
     private Player player;
     private static final float cameraLerp = 0.1f;
@@ -58,6 +58,8 @@ public class PlayState extends BaseState {
 
         Variables.WORLD_WIDTH = (WORLD_WIDTH);
         Variables.WORLD_HEIGHT = (WORLD_HEIGHT);
+        Variables.WORLD_ROWS = ROWS;
+        Variables.WORLD_COLUMNS = COLUMNS;
         Chest myChest = new Chest(2*Variables.TILEWIDTH,2*Variables.TILEHEIGHT, Chest.chestState.LOCKED);
         Chest myChest2 = new Chest(1*Variables.TILEWIDTH,1*Variables.TILEHEIGHT, Chest.chestState.CLOSED);
         entities.add(myChest2);
@@ -85,11 +87,7 @@ public class PlayState extends BaseState {
             Entity e =  entities.get(j);
             e.update(dt);
             Tile currentTile = world[getRowOfEntity(player)][getColumnOfEntity(player)];
-            if(currentTile.isSolid()){
-                Log.print("Handing Collision at "+currentTile.getX()+","+currentTile.getY());
-                player.handleCollision(currentTile.getX(),currentTile.getX()+Variables.TILEWIDTH,
-                        currentTile.getY(),currentTile.getY()+Variables.TILEHEIGHT);
-            }
+            player.setCurrentTile(currentTile);
 
             //make sure we are not checking player against itself
             if(!e.equals(player)) {
@@ -112,16 +110,20 @@ public class PlayState extends BaseState {
         updateCamera();
     }
 
-    private int getColumnOfEntity(Entity e){
+    public static int getColumnOfEntity(Entity e){
         float x =  e.getX() - e.ENTITY_WIDTH/2;
         int nearestX = (int)(Math.floor((x/Variables.TILEWIDTH))) + 1;
         return nearestX;
     }
 
-    private int getRowOfEntity(Entity e){
+    public static int getRowOfEntity(Entity e){
         float y =  e.getY() - e.ENTITY_HEIGHT/2;
         int nearestY = (int) (Math.floor((y/Variables.TILEHEIGHT))) + 1;
         return nearestY;
+    }
+
+    public static Tile getTile(int x,int y){
+        return world[x][y];
     }
 
     private void updateCamera(){
