@@ -16,6 +16,7 @@ import javax.print.attribute.standard.MediaSize;
 public class Player extends Entity {
 
     private TextureRegion playerImage;
+    private boolean opening;
 
 
     public Player(float x, float y){
@@ -27,6 +28,7 @@ public class Player extends Entity {
         DEFAULT_SPEED = 30f;
         ENTITY_HEIGHT = 32;
         ENTITY_WIDTH = 32;
+        setOpening(false);
 
         //eventually will be TextureRegion[] filled with animation states
         playerImage = new TextureRegion(ResourceManager.getTexture("player"),0,0,32,32);
@@ -96,5 +98,18 @@ public class Player extends Entity {
         if(Gdx.input.isKeyPressed(Input.Keys.S)) {
             this.move(Direction.DOWN);
         }
+        if(Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            setOpening(true);
+        }else{
+            setOpening(false);
+        }
+    }
+
+    private void setOpening(boolean b){
+        opening = b;
+    }
+
+    public boolean getOpening(){
+        return opening;
     }
 }

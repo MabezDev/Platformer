@@ -1,5 +1,7 @@
 package com.mabezdev.space2d.util;
 
+import com.mabezdev.space2d.entities.Entity;
+
 /**
  * Created by Mabez on 17/12/2015.
  */
@@ -16,4 +18,5 @@ public class Maths {
 
         return numToRound + multiple - remainder;
     }
+
 }

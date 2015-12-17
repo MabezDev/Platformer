@@ -6,8 +6,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.mabezdev.space2d.Variables;
+import com.mabezdev.space2d.entities.Chest;
 import com.mabezdev.space2d.entities.Entity;
 import com.mabezdev.space2d.entities.Player;
+import com.mabezdev.space2d.entities.StaticEntity;
 import com.mabezdev.space2d.managers.GameStateManager;
 import com.mabezdev.space2d.managers.ResourceManager;
 import com.mabezdev.space2d.tiles.Tile;
@@ -37,7 +39,7 @@ public class PlayState extends BaseState {
     private static float WORLD_WIDTH;
     private static float WORLD_HEIGHT;
     private Tile[][] world;
-    private ArrayList<Entity> entities;
+    private ArrayList<StaticEntity> entities;
     private Player player;
     private static final float cameraLerp = 0.1f;
 
@@ -47,10 +49,11 @@ public class PlayState extends BaseState {
 
         ResourceManager.loadTexture("tileset","tilesets/tilesets.png");
         ResourceManager.loadTexture("player","tilesets/playerset.png");
+        ResourceManager.loadTexture("interactive","tilesets/interactives.png");
 
         sb = new SpriteBatch();
         camera = GSManager.getCamera();
-        entities = new ArrayList<Entity>();
+        entities = new ArrayList<StaticEntity>();
         player = new Player(0,0);
         //set to ortho to scale down the player view
         camera.setToOrtho(false, Variables.WIDTH*unitScale, Variables.HEIGHT*unitScale);
@@ -61,9 +64,8 @@ public class PlayState extends BaseState {
 
         Variables.WORLD_WIDTH = (WORLD_WIDTH);
         Variables.WORLD_HEIGHT = (WORLD_HEIGHT);
-        entities.add(player);
-
-
+        Chest myChest = new Chest(2*Variables.TILEWIDTH,2*Variables.TILEHEIGHT);
+        entities.add(myChest);
     }
 
     private void loadMap(){
@@ -81,11 +83,23 @@ public class PlayState extends BaseState {
 
     @Override
     public void update(float dt) {
+        player.update(dt);
         for(int j=0; j < entities.size();j++){
-            entities.get(j).update(dt);
+            StaticEntity t = entities.get(j);
+            t.update(dt);
+            if(getColumnOfEntity(player)==getColumnOfEntity(t) && getRowOfEntity(player)==getRowOfEntity(t)){
+                //player is on top of object
+                if(player.getOpening()){
+                    Log.print("Player trying to open");
+                    t.doAction();
+                }
+            }
         }
-        //Log.print(getColumnOfEntity(player)+","+getRowOfEntity(player));
-        //Log.print(world[getRowOfEntity(player)][getColumnOfEntity(player)].ID);
+
+
+
+
+
         updateCamera();
     }
 
@@ -129,9 +143,11 @@ public class PlayState extends BaseState {
                 }
             }
             //draw entities next so they are on top of the world
+            //todo add comparator to make sure player is always draw last(over everything)
             for(int j=0; j < entities.size();j++){
                 entities.get(j).render(sb);
             }
+            player.render(sb);
 
         }
         sb.end();
