@@ -1,6 +1,8 @@
 package com.mabezdev.space2d.entities;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
+import com.mabezdev.space2d.Variables;
 
 /**
  * Created by Mabez on 14/12/2015.
@@ -25,6 +27,17 @@ public abstract class Entity {
         LEFT,
         RIGHT,
         DOWN
+    }
+
+    public float getDx(){
+        return dx;
+    }
+    public float getDy(){
+        return dy;
+    }
+
+    public Rectangle getBounds(){
+        return new Rectangle(x,y, ENTITY_WIDTH,ENTITY_HEIGHT);
     }
 
 

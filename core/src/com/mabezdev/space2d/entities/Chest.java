@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mabezdev.space2d.Variables;
 import com.mabezdev.space2d.managers.ResourceManager;
+import com.mabezdev.space2d.util.Log;
 
 /**
  * Created by Mabez on 17/12/2015.
@@ -18,13 +19,13 @@ public class Chest extends StaticEntity {
     private boolean isLocked;
     private boolean isOpen;
 
-    private enum chestState{
+    public enum chestState{
         OPEN,
         CLOSED,
         LOCKED
     }
 
-    public Chest(float x, float y){
+    public Chest(float x, float y,chestState initial){
         this.ENTITY_WIDTH = Variables.TILEWIDTH;
         this.ENTITY_HEIGHT = Variables.TILEHEIGHT;
         this.NAME = "CHEST";
@@ -39,7 +40,8 @@ public class Chest extends StaticEntity {
         chestTextures[0] = new TextureRegion(ResourceManager.getTexture("interactive"),0,0,32,32);
         chestTextures[1] = new TextureRegion(ResourceManager.getTexture("interactive"),32,0,32,32);
         //default close, maybe add param to ask
-        currentTexture = chestTextures[0];
+
+        setState(initial);
     }
 
 
@@ -51,11 +53,15 @@ public class Chest extends StaticEntity {
 
     @Override
     public void doAction(){
-        isOpen = !isOpen;
-        if(isOpen){
-            setState(chestState.OPEN);
+        if(!isLocked) {
+            isOpen = !isOpen;
+            if (isOpen) {
+                setState(chestState.OPEN);
+            } else {
+                setState(chestState.CLOSED);
+            }
         } else {
-            setState(chestState.CLOSED);
+            Log.print("This chest is locked!");
         }
     }
 
@@ -74,8 +80,13 @@ public class Chest extends StaticEntity {
                 currentTexture = chestTextures[0];
                 isOpen = false;
                 break;
+            case LOCKED:
+                currentTexture = chestTextures[0];
+                isLocked = true;
+                break;
 
         }
+        Log.print("Chest is currently: "+currentState.toString());
     }
 
     public chestState getChestState(){

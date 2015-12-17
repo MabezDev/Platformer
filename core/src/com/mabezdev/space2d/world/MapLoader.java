@@ -3,6 +3,7 @@ package com.mabezdev.space2d.world;
 import com.badlogic.gdx.Gdx;
 import com.mabezdev.space2d.Variables;
 import com.mabezdev.space2d.tiles.DirtTile;
+import com.mabezdev.space2d.tiles.StoneTile;
 import com.mabezdev.space2d.tiles.Tile;
 import com.mabezdev.space2d.util.Log;
 
@@ -29,7 +30,8 @@ public class MapLoader {
     private enum TILES{
 
         GRASS(0),
-        DIRT(1);
+        DIRT(1),
+        STONE(2);
 
         private int id;
 
@@ -71,6 +73,9 @@ public class MapLoader {
                 //improve efficiency by loadng one of each object then reusing it instead of a new object for each tile?
                 if(tile == TILES.DIRT.getId()){
                     tempTiles[i][j] = new DirtTile(j* Variables.TILEWIDTH,i*Variables.TILEHEIGHT, TILES.DIRT.getId());
+                }
+                if(tile == TILES.STONE.getId()){
+                    tempTiles[i][j] = new StoneTile(j * Variables.TILEWIDTH,i*Variables.TILEHEIGHT, TILES.STONE.getId());
                 }
             }
         }

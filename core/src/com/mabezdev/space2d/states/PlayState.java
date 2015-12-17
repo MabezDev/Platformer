@@ -58,7 +58,9 @@ public class PlayState extends BaseState {
 
         Variables.WORLD_WIDTH = (WORLD_WIDTH);
         Variables.WORLD_HEIGHT = (WORLD_HEIGHT);
-        Chest myChest = new Chest(2*Variables.TILEWIDTH,2*Variables.TILEHEIGHT);
+        Chest myChest = new Chest(2*Variables.TILEWIDTH,2*Variables.TILEHEIGHT, Chest.chestState.LOCKED);
+        Chest myChest2 = new Chest(1*Variables.TILEWIDTH,1*Variables.TILEHEIGHT, Chest.chestState.CLOSED);
+        entities.add(myChest2);
         entities.add(myChest);
         entities.add(player);
     }
@@ -82,6 +84,13 @@ public class PlayState extends BaseState {
             //update all entities
             Entity e =  entities.get(j);
             e.update(dt);
+            Tile currentTile = world[getRowOfEntity(player)][getColumnOfEntity(player)];
+            if(currentTile.isSolid()){
+                Log.print("Handing Collision at "+currentTile.getX()+","+currentTile.getY());
+                player.handleCollision(currentTile.getX(),currentTile.getX()+Variables.TILEWIDTH,
+                        currentTile.getY(),currentTile.getY()+Variables.TILEHEIGHT);
+            }
+
             //make sure we are not checking player against itself
             if(!e.equals(player)) {
                 //cast the entity to a StaticEntity

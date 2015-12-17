@@ -10,24 +10,19 @@ import com.mabezdev.space2d.managers.ResourceManager;
  */
 public class DirtTile extends Tile {
 
-    private TextureRegion dirt;
-    private float x;
-    private float y;
-
     public DirtTile(float x, float y,int ID){
         this.ID = ID;
         this.x = x;
         this.y = y;
-        dirt = new TextureRegion(ResourceManager.getTexture("tileset"),0,0, 32,32);
+        TileImage = new TextureRegion(ResourceManager.getTexture("tileset"),0,0, 32,32);
         //here
-        setSolid(true);
     }
 
 
 
     @Override
     public void render(SpriteBatch sb){
-        sb.draw(dirt,x,y);
+        sb.draw(TileImage,x,y);
     }
 
 }

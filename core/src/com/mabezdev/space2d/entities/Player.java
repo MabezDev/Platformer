@@ -17,6 +17,7 @@ public class Player extends Entity {
 
     private TextureRegion playerImage;
     private boolean Action;
+    private float dt;
 
 
     public Player(float x, float y){
@@ -41,14 +42,16 @@ public class Player extends Entity {
 
     @Override
     public void update(float dt) {
-
+        this.dt = dt;
         //collect user input
         handleInput();
 
+
         y += dy * dt;
         x += dx * dt;
+
         //check map bounds an update player position. Very smooth, I might add
-        if(x < 0){
+        /*if(x < 0){
             x += x*-1;
         }else if(x > Variables.WORLD_WIDTH  - this.ENTITY_WIDTH) {
             x -= dx * dt;
@@ -58,11 +61,27 @@ public class Player extends Entity {
             y += y * -1;
         } else if(y > Variables.WORLD_HEIGHT - this.ENTITY_HEIGHT) {
             y -= dy * dt;
-        }
+        }*/
 
         //decelerate player with drag
         handleRetardation();
     }
+
+    public void handleCollision(float startx,float endx,float starty, float endy){
+        float dt = this.dt;
+        if(x < startx) {
+            x -= (dx * dt) + dt;
+        } else if( x < endx){
+            x -= (dx * dt) - dt;
+        }
+
+        if(y < starty){
+            y -= (dy * dt) + dt;
+        } else if(y < endy){
+            y -= (dy * dt) - dt;
+        }
+    }
+
 
 
     private void handleRetardation(){
