@@ -55,7 +55,7 @@ public class Player extends Entity {
         tempX += dx * dt;
         tempY += dy * dt;
 
-        //player and tile collision still needs alot of work
+        //player and tile now smooth but ugs need to fixed like that fact it looks like you are walking on the tile when ur not
         Tile next = null;
         Tile nextY = null;
         int currentRow = PlayState.getRowOfEntity(this);
@@ -65,7 +65,7 @@ public class Player extends Entity {
             if(currentColumn < Variables.WORLD_COLUMNS - 1) {
                 next = PlayState.getTile(currentRow, currentColumn + 1);
             }
-        } else if(tempX < (currentTile.getX() - Variables.TILEWIDTH/2) ){
+        } else if(tempX < (currentTile.getX() - Variables.TILEWIDTH/2 + ENTITY_WIDTH/2) ){
             if(currentColumn > 0) {
                 next = PlayState.getTile(currentRow, currentColumn - 1);
             }
