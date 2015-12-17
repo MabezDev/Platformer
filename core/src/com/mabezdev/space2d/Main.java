@@ -27,5 +27,6 @@ public class Main extends ApplicationAdapter {
 		dt = Gdx.graphics.getDeltaTime();
 		myGsm.update(dt);
 		myGsm.render();
+		Gdx.graphics.setTitle("SPACE2D FPS: "+Integer.toString(Gdx.graphics.getFramesPerSecond()));
 	}
 }

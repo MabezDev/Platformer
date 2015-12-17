@@ -29,6 +29,10 @@ public class GameStateManager {
 
     }
 
+    public OrthographicCamera getCamera(){
+        return camera;
+    }
+
     public void setCurrentState(State s) {
         this.currentState = s;
         if(state!=null){
