@@ -52,7 +52,7 @@ public class PlayState extends BaseState {
         //set to ortho to scale down the player view
         camera.setToOrtho(false, Variables.WIDTH*unitScale, Variables.HEIGHT*unitScale);
         //Get the map into memory!
-        loadMap();
+        world = loadMap();
         WORLD_WIDTH = COLUMNS * Variables.TILEWIDTH;
         WORLD_HEIGHT = ROWS * Variables.TILEHEIGHT;
 
@@ -67,17 +67,17 @@ public class PlayState extends BaseState {
         entities.add(player);
     }
 
-    private void loadMap(){
+    private Tile[][] loadMap(){
         try {
             mapGenerator = new MapGenerator(worldFile);
             mapGenerator.generateFile();
-            mapLoaderLoader = new MapLoader(worldFile);
-            world = mapLoaderLoader.getMap();
+            mapLoaderLoader = new MapLoader(worldFile);;
         }catch (IOException e){
             Log.print(e.toString());
         }
         ROWS = MapLoader.getRows();
         COLUMNS = MapLoader.getColumns();
+        return mapLoaderLoader.getMap();
     }
 
     @Override
@@ -95,8 +95,9 @@ public class PlayState extends BaseState {
                 StaticEntity t = (StaticEntity) e;
                 // if player is in the same tile as the StaticEntity
                 if (getColumnOfEntity(player) == getColumnOfEntity(t) && getRowOfEntity(player) == getRowOfEntity(t)) {
-                    //player is on top of object
+                    //player is on top of object, then get if the player is pressing the action button
                     if (player.getAction()) {
+                        //player wants do action so StaticEntity.doAction()
                         t.doAction();
                     }
                 }
