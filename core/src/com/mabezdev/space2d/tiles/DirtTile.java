@@ -10,10 +10,12 @@ import com.mabezdev.space2d.managers.ResourceManager;
  */
 public class DirtTile extends Tile {
 
-    public DirtTile(float x, float y,int ID){
+    public DirtTile(float x, float y,float width,float height,int ID){
         this.ID = ID;
         this.x = x;
         this.y = y;
+        this.TILEWIDTH = width;
+        this.TILEHEIGHT = height;
         TileImage = new TextureRegion(ResourceManager.getTexture("tileset"),0,0, 32,32);
         //here
     }

@@ -133,6 +133,7 @@ public abstract class Entity {
         //player and tile now smooth but ugs need to fixed like that fact it looks like you are walking on the tile when ur not
         Tile next = null;
         Tile nextY = null;
+
         int currentRow = PlayState.getRowOfEntity(this);
         int currentColumn = PlayState.getColumnOfEntity(this);
 
@@ -145,19 +146,19 @@ public abstract class Entity {
             This collision detection algorithm checks a the 8 Tiles around the player  to see if moving into the next tile will be solid
             if it is solids then don't update the players position.
             Small diagram, P = Player, # = Tiles being checked.
-            ###
-            #P#
-            ###
+            # # #
+            # P #
+            # # #
          */
 
         //check tile to the right
-        if((tempX + ENTITY_WIDTH/2) > (currentTile.getX() + Variables.TILEWIDTH)){
+        if((tempX + ENTITY_WIDTH/2) > (currentTile.getX() + currentTile.getTileWidth())){
             if(currentColumn < Variables.WORLD_COLUMNS - 1) {
                 next = PlayState.getTile(currentRow, currentColumn + 1);
                 right = true;
             }
             //check left
-        } else if(tempX - ENTITY_WIDTH/2 < ((currentTile.getX() - Variables.TILEWIDTH))){
+        } else if(tempX - ENTITY_WIDTH/2 < ((currentTile.getX() - currentTile.getTileWidth()))){
             if(currentColumn > 0) {
                 next = PlayState.getTile(currentRow, currentColumn - 1);
                 left = true;
@@ -166,13 +167,13 @@ public abstract class Entity {
             x = tempX;
         }
         //check tile above
-        if(tempY + ENTITY_HEIGHT/2 > (currentTile.getY() + Variables.TILEHEIGHT)) {
+        if(tempY + ENTITY_HEIGHT/2 > (currentTile.getY() + currentTile.getTileHeight())) {
             if(currentRow < Variables.WORLD_ROWS - 1){
                 nextY = PlayState.getTile(currentRow + 1,currentColumn);
                 up = true;
             }
             //check tile below
-        } else if(tempY - ENTITY_HEIGHT/2 < (currentTile.getY() - Variables.TILEHEIGHT)){
+        } else if(tempY - ENTITY_HEIGHT/2 < (currentTile.getY() - currentTile.getTileHeight())){
             if(currentRow > 0){
                 nextY = PlayState.getTile(currentRow - 1,currentColumn);
                 down = true;

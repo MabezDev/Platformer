@@ -9,10 +9,12 @@ import com.mabezdev.space2d.managers.ResourceManager;
  */
 public class StoneTile extends Tile {
 
-    public StoneTile(float x, float y,int ID){
+    public StoneTile(float x, float y,float width,float height,int ID){
         this.x = x;
         this.y = y;
         this.ID = ID;
+        this.TILEWIDTH = width;
+        this.TILEHEIGHT = height;
         TileImage = new TextureRegion(ResourceManager.getTexture("tileset"),32,0,32,32);
         setSolid(true);
     }

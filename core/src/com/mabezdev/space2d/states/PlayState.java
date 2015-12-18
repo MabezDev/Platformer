@@ -11,6 +11,7 @@ import com.mabezdev.space2d.entities.StaticEntity;
 import com.mabezdev.space2d.managers.GameStateManager;
 import com.mabezdev.space2d.managers.ResourceManager;
 import com.mabezdev.space2d.tiles.Tile;
+import com.mabezdev.space2d.util.FileLoader;
 import com.mabezdev.space2d.util.Log;
 import com.mabezdev.space2d.world.MapLoader;
 import com.mabezdev.space2d.world.MapGenerator;
@@ -77,10 +78,10 @@ public class PlayState extends BaseState {
         try {
             mapGenerator = new MapGenerator(worldFile);
             mapGenerator.generateFile();
-            mapLoaderLoader = new MapLoader(worldFile);;
         }catch (IOException e){
             Log.print(e.toString());
         }
+        mapLoaderLoader = new MapLoader(new FileLoader(worldFile));
         ROWS = MapLoader.getRows();
         COLUMNS = MapLoader.getColumns();
         return mapLoaderLoader.getMap();

@@ -14,6 +14,8 @@ public abstract class Tile {
     public static int ID;
     protected float x;
     protected float y;
+    protected float TILEWIDTH;
+    protected float TILEHEIGHT;
     protected TextureRegion TileImage;
 
 
@@ -21,7 +23,15 @@ public abstract class Tile {
     public abstract void render(SpriteBatch sb);
 
     public Rectangle getBounds(){
-        return new Rectangle(x,y, Variables.TILEWIDTH,Variables.TILEHEIGHT);
+        return new Rectangle(x,y, TILEWIDTH,TILEHEIGHT);
+    }
+
+    public float getTileWidth(){
+        return TILEWIDTH;
+    }
+
+    public float getTileHeight(){
+        return TILEHEIGHT;
     }
 
 

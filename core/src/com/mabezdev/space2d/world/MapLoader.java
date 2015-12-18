@@ -5,6 +5,7 @@ import com.mabezdev.space2d.Variables;
 import com.mabezdev.space2d.tiles.DirtTile;
 import com.mabezdev.space2d.tiles.StoneTile;
 import com.mabezdev.space2d.tiles.Tile;
+import com.mabezdev.space2d.util.FileLoader;
 import com.mabezdev.space2d.util.Log;
 
 import java.io.File;
@@ -44,23 +45,10 @@ public class MapLoader {
         }
     }
 
-    public MapLoader(String path) throws IOException{
-        this.path = path;
-        reader = new Scanner(new File(Gdx.files.getLocalStoragePath()+path));
-        lines = getLines();
-        ROWS = getRows();
-        COLUMNS = getUnprocessedColumns()/2;
-        GRID = new int[ROWS][COLUMNS];
-        loadMap();
-    }
-
-    private static void loadMap() throws IOException{
-        for(int i = 0; i < ROWS;i++){
-            String[] separated = lines[i].split(",");
-            for(int j= 0;j < COLUMNS;j++){
-                GRID[i][j] = Integer.parseInt(separated[j]);
-            }
-        }
+    public MapLoader(FileLoader myfileLoader){ //FileLoader can be replaced with OnlineStreaming version when it gets to
+        ROWS = myfileLoader.getRows();
+        COLUMNS = myfileLoader.getColumns();
+        GRID = myfileLoader.getData();
     }
 
     public static Tile[][] getMap(){
@@ -72,10 +60,10 @@ public class MapLoader {
                 //choose tile based on ID
                 //improve efficiency by loadng one of each object then reusing it instead of a new object for each tile?
                 if(tile == TILES.DIRT.getId()){
-                    tempTiles[i][j] = new DirtTile(j* Variables.TILEWIDTH,i*Variables.TILEHEIGHT, TILES.DIRT.getId());
+                    tempTiles[i][j] = new DirtTile(j* Variables.TILEWIDTH,i*Variables.TILEHEIGHT,Variables.TILEWIDTH,Variables.TILEHEIGHT,TILES.DIRT.getId());
                 }
                 if(tile == TILES.STONE.getId()){
-                    tempTiles[i][j] = new StoneTile(j * Variables.TILEWIDTH,i*Variables.TILEHEIGHT, TILES.STONE.getId());
+                    tempTiles[i][j] = new StoneTile(j * Variables.TILEWIDTH,i*Variables.TILEHEIGHT,Variables.TILEWIDTH,Variables.TILEHEIGHT, TILES.STONE.getId());
                 }
             }
         }
@@ -83,23 +71,12 @@ public class MapLoader {
     }
 
     public static int getRows(){
-        return lines.length;
+        return ROWS;
     }
     public static int getColumns(){
         return COLUMNS;
     }
-    private static int getUnprocessedColumns(){
-        return lines[0].length();
-    }
 
-    private static String[] getLines ()throws IOException {
-        ArrayList<String> lines1 = new ArrayList<String>();
-        while (reader.hasNextLine()) {
-            lines1.add(reader.nextLine());
-        }
-        reader.close();
-        return lines1.toArray(new String[lines1.size()]);
-    }
 
     public static void dispose() throws IOException {
 

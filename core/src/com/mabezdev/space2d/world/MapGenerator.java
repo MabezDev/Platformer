@@ -9,6 +9,8 @@ import java.io.IOException;
  */
 public class MapGenerator {
 
+    //filler class currently
+
     private static String[] lines = new String[5];
     private static BufferedWriter myWriter;
 
