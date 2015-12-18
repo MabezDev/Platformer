@@ -60,8 +60,8 @@ public class Player extends Entity {
         Tile nextY = null;
         int currentRow = PlayState.getRowOfEntity(this);
         int currentColumn = PlayState.getColumnOfEntity(this);
-
         // x axis collisions are fully implemented!
+        //enti/2 is working but i dont want ent/2
         //check tile to the right
         if((tempX + ENTITY_WIDTH/2) > (currentTile.getX() + Variables.TILEWIDTH)){
             if(currentColumn < Variables.WORLD_COLUMNS - 1) {
@@ -75,6 +75,19 @@ public class Player extends Entity {
         } else {
             x = tempX;
         }
+        //up
+        if(tempY + ENTITY_HEIGHT/2 > (currentTile.getY() + Variables.TILEHEIGHT)) {
+            if(currentRow < Variables.WORLD_ROWS - 1){
+                nextY = PlayState.getTile(currentRow + 1,currentColumn);
+            }
+            //down
+        } else if(tempY - ENTITY_HEIGHT/2 < (currentTile.getY() - Variables.TILEHEIGHT)){
+                if(currentRow > 0){
+                    nextY = PlayState.getTile(currentRow - 1,currentColumn);
+                }
+        } else {
+            y = tempY;
+        }
 
         if(next!=null){
             if(next.isSolid()){
@@ -86,20 +99,7 @@ public class Player extends Entity {
                 }
             } else {
                 x = tempX;
-
             }
-        }
-
-        if(tempY > (currentTile.getY() + Variables.TILEWIDTH/2)) {
-            if(currentRow < Variables.WORLD_ROWS - 1){
-                nextY = PlayState.getTile(currentRow + 1,currentColumn);
-            }
-        } else if(tempY - ENTITY_HEIGHT/2 < (currentTile.getY() - Variables.HEIGHT/2)){
-                if(currentRow > 0){
-                    nextY = PlayState.getTile(currentRow - 1,currentColumn);
-                }
-        } else {
-            y = tempY;
         }
 
         if(nextY!=null){
