@@ -60,12 +60,15 @@ public class Player extends Entity {
         Tile nextY = null;
         int currentRow = PlayState.getRowOfEntity(this);
         int currentColumn = PlayState.getColumnOfEntity(this);
-        //check tile to the left
-        if(tempX > (currentTile.getX() + Variables.TILEWIDTH/2)){
+
+        // x axis collisions are fully implemented!
+        //check tile to the right
+        if((tempX + ENTITY_WIDTH/2) > (currentTile.getX() + Variables.TILEWIDTH)){
             if(currentColumn < Variables.WORLD_COLUMNS - 1) {
                 next = PlayState.getTile(currentRow, currentColumn + 1);
             }
-        } else if(tempX < (currentTile.getX() - Variables.TILEWIDTH/2 + ENTITY_WIDTH/2) ){
+            //check left
+        } else if(tempX - ENTITY_WIDTH/2 < ((currentTile.getX() - Variables.TILEWIDTH))){
             if(currentColumn > 0) {
                 next = PlayState.getTile(currentRow, currentColumn - 1);
             }
@@ -76,9 +79,14 @@ public class Player extends Entity {
         if(next!=null){
             if(next.isSolid()){
                 //don't move
+                if(tempX > x){
+                    Log.print("BLOCKING RIGHT");
+                } else if(tempX < x){
+                    Log.print("BLOCKING LEFT");
+                }
             } else {
-                Log.print("Updating x");
                 x = tempX;
+
             }
         }
 
@@ -86,7 +94,7 @@ public class Player extends Entity {
             if(currentRow < Variables.WORLD_ROWS - 1){
                 nextY = PlayState.getTile(currentRow + 1,currentColumn);
             }
-        } else if(tempY < currentTile.getY()){
+        } else if(tempY - ENTITY_HEIGHT/2 < (currentTile.getY() - Variables.HEIGHT/2)){
                 if(currentRow > 0){
                     nextY = PlayState.getTile(currentRow - 1,currentColumn);
                 }
@@ -97,8 +105,12 @@ public class Player extends Entity {
         if(nextY!=null){
             if(nextY.isSolid()){
                 //don't move
+                if(tempY > y){
+                    Log.print("BLOCKING UP");
+                } else if(tempY < y){
+                    Log.print("BLOCKING DOWN");
+                }
             } else {
-                Log.print("Updating y");
                 y = tempY;
             }
         }
@@ -121,6 +133,7 @@ public class Player extends Entity {
         //decelerate player with drag
         handleRetardation();
     }
+
 
     public void setCurrentTile(Tile t){
         currentTile = t;
