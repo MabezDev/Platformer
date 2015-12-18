@@ -5,6 +5,8 @@ import com.mabezdev.space2d.states.BaseState;
 import com.mabezdev.space2d.states.MenuState;
 import com.mabezdev.space2d.states.OptionsState;
 import com.mabezdev.space2d.states.PlayState;
+import com.mabezdev.space2d.states.SubStates.BaseSubState;
+import com.mabezdev.space2d.states.SubStates.InventoryState;
 
 /**
  * Created by Mabez on 14/12/2015.
@@ -18,14 +20,23 @@ public class GameStateManager {
         OPTIONS
     }
 
+    public enum SubState {
+        PAUSED,
+        INVENTORY,
+        NONE
+    }
+
     public State currentState;
     private BaseState state;
+    private SubState currentSubState;
+    private BaseSubState subState;
     protected OrthographicCamera camera;
 
     public GameStateManager(OrthographicCamera camera) {
         this.camera = camera;
         ResourceManager.loadFont("defaultFont",36,"orangejuice2.ttf");
         setCurrentState(State.MENU);
+        setSubState(SubState.NONE);
 
     }
 
@@ -58,12 +69,36 @@ public class GameStateManager {
         return currentState;
     }
 
+    public void setSubState(SubState s){
+        this.currentSubState = s;
+        if(subState!=null){
+            subState.dispose();
+        }
+
+        switch (currentSubState){
+            case INVENTORY:
+                subState = new InventoryState(this);
+                break;
+            case NONE:
+                subState = null;
+                break;
+        }
+
+    }
+
     public void update(float dt) {
         state.update(dt);
         state.handleInput();
+        if(!currentSubState.equals(SubState.NONE)){
+            subState.update(dt);
+            subState.handleInput();
+        }
     }
 
     public void render() {
         state.render();
+        if(!currentSubState.equals(SubState.NONE)){
+            subState.render();
+        }
     }
 }

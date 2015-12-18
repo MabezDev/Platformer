@@ -14,7 +14,7 @@ import com.mabezdev.space2d.managers.ResourceManager;
 public abstract class BaseState {
 
     public static String stateName;
-    protected GameStateManager GSManager;
+    protected static GameStateManager GSManager;
     protected SpriteBatch batch;
     protected GlyphLayout layout;
     protected BitmapFont menuFont;

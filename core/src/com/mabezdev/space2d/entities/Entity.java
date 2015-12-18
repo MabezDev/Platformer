@@ -135,34 +135,73 @@ public abstract class Entity {
         Tile nextY = null;
         int currentRow = PlayState.getRowOfEntity(this);
         int currentColumn = PlayState.getColumnOfEntity(this);
-        //enti/2 is working but i dont want ent/2
+
+        boolean up = false;
+        boolean down = false;
+        boolean right = false;
+        boolean left = false;
+
+        /*
+            This collision detection algorithm checks a the 8 Tiles around the player  to see if moving into the next tile will be solid
+            if it is solids then don't update the players position.
+            Small diagram, P = Player, # = Tiles being checked.
+            ###
+            #P#
+            ###
+         */
+
         //check tile to the right
         if((tempX + ENTITY_WIDTH/2) > (currentTile.getX() + Variables.TILEWIDTH)){
             if(currentColumn < Variables.WORLD_COLUMNS - 1) {
                 next = PlayState.getTile(currentRow, currentColumn + 1);
+                right = true;
             }
             //check left
         } else if(tempX - ENTITY_WIDTH/2 < ((currentTile.getX() - Variables.TILEWIDTH))){
             if(currentColumn > 0) {
                 next = PlayState.getTile(currentRow, currentColumn - 1);
+                left = true;
             }
         } else {
             x = tempX;
         }
-        //up
+        //check tile above
         if(tempY + ENTITY_HEIGHT/2 > (currentTile.getY() + Variables.TILEHEIGHT)) {
             if(currentRow < Variables.WORLD_ROWS - 1){
                 nextY = PlayState.getTile(currentRow + 1,currentColumn);
+                up = true;
             }
-            //down
+            //check tile below
         } else if(tempY - ENTITY_HEIGHT/2 < (currentTile.getY() - Variables.TILEHEIGHT)){
             if(currentRow > 0){
                 nextY = PlayState.getTile(currentRow - 1,currentColumn);
+                down = true;
             }
         } else {
             y = tempY;
         }
 
+        //check tile above and to the right
+        if(up && right){
+            if(currentColumn < Variables.WORLD_COLUMNS - 1 && currentRow < Variables.WORLD_ROWS - 1) {
+                next = PlayState.getTile(currentRow + 1, currentColumn + 1);
+            }
+            //check top left tile
+        } else if(up && left){
+            if(currentColumn > 0 && currentRow < Variables.WORLD_ROWS - 1) {
+                next = PlayState.getTile(currentRow + 1, currentColumn -1);
+            }
+            //check bottom right tile
+        } else if(down && right){
+            if(currentColumn < Variables.WORLD_COLUMNS - 1 && currentRow > 0) {
+                next = PlayState.getTile(currentRow - 1, currentColumn + 1);
+            }
+            //check bottom left tile
+        } else if(down && left) {
+            if (currentColumn > 0 && currentRow > 0) {
+                next = PlayState.getTile(currentRow - 1, currentColumn - 1);
+            }
+        }
         if(next!=null){
             if(next.isSolid()){
                 //don't move
@@ -175,7 +214,6 @@ public abstract class Entity {
                 x = tempX;
             }
         }
-
         if(nextY!=null){
             if(nextY.isSolid()){
                 //don't move

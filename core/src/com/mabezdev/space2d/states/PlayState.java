@@ -14,6 +14,8 @@ import com.mabezdev.space2d.tiles.Tile;
 import com.mabezdev.space2d.util.Log;
 import com.mabezdev.space2d.world.MapLoader;
 import com.mabezdev.space2d.world.MapGenerator;
+import org.ietf.jgss.GSSManager;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -65,6 +67,10 @@ public class PlayState extends BaseState {
         entities.add(myChest2);
         entities.add(myChest);
         entities.add(player);
+    }
+
+    public static GameStateManager getGSM(){
+        return GSManager;
     }
 
     private Tile[][] loadMap(){
