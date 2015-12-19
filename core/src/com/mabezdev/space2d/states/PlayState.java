@@ -47,6 +47,7 @@ public class PlayState extends BaseState {
         ResourceManager.loadTexture("tileset","tilesets/tilesets.png");
         ResourceManager.loadTexture("player","tilesets/playerset.png");
         ResourceManager.loadTexture("interactive","tilesets/interactives.png");
+        ResourceManager.loadTexture("items","tilesets/items.png");
 
         sb = new SpriteBatch();
         camera = GSManager.getCamera();

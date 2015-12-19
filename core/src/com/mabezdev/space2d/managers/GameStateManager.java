@@ -7,6 +7,7 @@ import com.mabezdev.space2d.states.OptionsState;
 import com.mabezdev.space2d.states.PlayState;
 import com.mabezdev.space2d.states.SubStates.BaseSubState;
 import com.mabezdev.space2d.states.SubStates.InventoryState;
+import com.mabezdev.space2d.world.InventoryManager;
 
 /**
  * Created by Mabez on 14/12/2015.
@@ -36,7 +37,7 @@ public class GameStateManager {
         this.camera = camera;
         ResourceManager.loadFont("defaultFont",36,"orangejuice2.ttf");
         setCurrentState(State.MENU);
-        setSubState(SubState.NONE);
+        setSubState(SubState.NONE, null,null);
 
     }
 
@@ -69,7 +70,7 @@ public class GameStateManager {
         return currentState;
     }
 
-    public void setSubState(SubState s){
+    public void setSubState(SubState s, Object params, float[] xy){
         this.currentSubState = s;
         if(subState!=null){
             subState.dispose();
@@ -77,7 +78,9 @@ public class GameStateManager {
 
         switch (currentSubState){
             case INVENTORY:
-                subState = new InventoryState(this);
+                if(xy!=null){
+                    subState = new InventoryState(this,(InventoryManager) params,xy[0],xy[1],xy[2],xy[3]);
+                }
                 break;
             case NONE:
                 subState = null;

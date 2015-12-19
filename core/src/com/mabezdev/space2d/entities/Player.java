@@ -8,6 +8,8 @@ import com.mabezdev.space2d.Variables;
 import com.mabezdev.space2d.managers.GameStateManager;
 import com.mabezdev.space2d.managers.ResourceManager;
 import com.mabezdev.space2d.states.PlayState;
+import com.mabezdev.space2d.util.FileLoader;
+import com.mabezdev.space2d.world.InventoryManager;
 
 /**
  * Created by Mabez on 14/12/2015.
@@ -18,6 +20,7 @@ public class Player extends Entity {
     private boolean Action;
     private boolean Inventory;
     private boolean canMove;
+    private InventoryManager playerManager;
 
 
     public Player(float x, float y){
@@ -34,6 +37,7 @@ public class Player extends Entity {
         canMove = true;
         //eventually will be TextureRegion[] filled with animation states
         playerImage = new TextureRegion(ResourceManager.getTexture("player"),0,0,32,32);
+        playerManager = new InventoryManager(new FileLoader("myInventory.txt"));
     }
 
     @Override
@@ -98,15 +102,18 @@ public class Player extends Entity {
         if(Gdx.input.isKeyJustPressed(Input.Keys.I)){
             setInventory(!Inventory);
             if(Inventory){
-                PlayState.getGSM().setSubState(GameStateManager.SubState.INVENTORY);
+                float[] coords = {20,40,Variables.WIDTH - 40,Variables.HEIGHT - 80};
+                PlayState.getGSM().setSubState(GameStateManager.SubState.INVENTORY,playerManager,coords);
                 canMove = false;
             } else {
-                PlayState.getGSM().setSubState(GameStateManager.SubState.NONE);
+                PlayState.getGSM().setSubState(GameStateManager.SubState.NONE,null,null);
                 canMove = true;
             }
 
         }
     }
+
+
 
     private void setAction(boolean b){
         Action = b;

@@ -1,19 +1,12 @@
 package com.mabezdev.space2d.world;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.mabezdev.space2d.tiles.InventoryTile;
 import com.mabezdev.space2d.util.FileLoader;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
  * Created by Mabez on 18/12/2015.
  */
 public class InventoryManager {
 
-    private TextureRegion[][] inventory;
     private int ROWS;
     private int COLUMNS;
     private int[][] valInventory;
@@ -24,18 +17,33 @@ public class InventoryManager {
         valInventory = fileLoader.getData();
         ROWS = fileLoader.getRows();
         COLUMNS = fileLoader.getColumns();
+        //load tilesets for items
     }
 
     public int[][] getInventory(){
-        return null;
+        return valInventory;
+
     }
 
-    public void updateInventory(InventoryTile t,int index){
+    public void addToInventory(int itemID, int row,int column){
+        valInventory[row][column] = itemID;
+    }
 
+    public void removeFromInventory(int row,int column){
+        valInventory[row][column] = 0; //zero will be empty
     }
 
     public void saveInventory(){
 
+    }
+
+
+    public int getRows() {
+        return ROWS;
+    }
+
+    public int getColumns() {
+        return COLUMNS;
     }
 
 

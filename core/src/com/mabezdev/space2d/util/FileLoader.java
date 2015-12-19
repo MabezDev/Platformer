@@ -1,7 +1,6 @@
 package com.mabezdev.space2d.util;
 
 import com.badlogic.gdx.Gdx;
-import com.mabezdev.space2d.tiles.InventoryTile;
 
 import java.io.File;
 import java.io.IOException;
