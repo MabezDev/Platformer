@@ -30,7 +30,7 @@ public class InventoryManager {
     }
 
     public void removeFromInventory(int row,int column){
-        valInventory[row][column] = 0; //zero will be empty
+        valInventory[row][column] = 0; //zero itemID will be empty
     }
 
     public void saveInventory(){

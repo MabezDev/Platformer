@@ -29,8 +29,8 @@ public class PlayState extends BaseState {
     private MapLoader mapLoaderLoader;
     private MapGenerator mapGenerator;
     private String worldFile = "world.txt";
-    private SpriteBatch sb;
-    private OrthographicCamera camera;
+    private static SpriteBatch sb;
+    private static OrthographicCamera camera;
     private static int ROWS;
     private static int COLUMNS;
     private static float WORLD_WIDTH;
@@ -60,15 +60,22 @@ public class PlayState extends BaseState {
         WORLD_WIDTH = COLUMNS * Variables.TILEWIDTH;
         WORLD_HEIGHT = ROWS * Variables.TILEHEIGHT;
 
+        Variables.GAME_CAMERA_VIEWPORT_HEIGHT = camera.viewportHeight;
+        Variables.GAME_CAMERA_VIEWPORT_WIDTH = camera.viewportWidth;
+
         Variables.WORLD_WIDTH = (WORLD_WIDTH);
         Variables.WORLD_HEIGHT = (WORLD_HEIGHT);
         Variables.WORLD_ROWS = ROWS;
         Variables.WORLD_COLUMNS = COLUMNS;
-        Chest myChest = new Chest(2*Variables.TILEWIDTH,2*Variables.TILEHEIGHT, Chest.chestState.LOCKED);
+        Chest myChest = new Chest(2*Variables.TILEWIDTH,2*Variables.TILEHEIGHT, Chest.chestState.OPEN);
         Chest myChest2 = new Chest(1*Variables.TILEWIDTH,1*Variables.TILEHEIGHT, Chest.chestState.CLOSED);
         entities.add(myChest2);
         entities.add(myChest);
         entities.add(player);
+    }
+
+    public static SpriteBatch getSpriteBatch() {
+        return sb;
     }
 
     public static GameStateManager getGSM(){

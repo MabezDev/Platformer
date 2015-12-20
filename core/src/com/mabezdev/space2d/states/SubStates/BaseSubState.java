@@ -11,8 +11,8 @@ public abstract class BaseSubState extends BaseState{
     //need x and y as it wont fill the screen as its a sub state
     protected float x;
     protected float y;
-    protected float x2;
-    protected float y2;
+    protected float WIDTH;
+    protected float HEIGHT;
 
     public BaseSubState(GameStateManager gsm) {
         super(gsm);

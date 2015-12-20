@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.mabezdev.space2d.Variables;
 import com.mabezdev.space2d.managers.GameStateManager;
 import com.mabezdev.space2d.managers.ResourceManager;
+import com.mabezdev.space2d.states.PlayState;
 import com.mabezdev.space2d.tiles.Tile;
 import com.mabezdev.space2d.tiles.items.Empty;
 import com.mabezdev.space2d.tiles.items.ItemTile;
@@ -25,7 +26,6 @@ public class InventoryState extends BaseSubState{
 
     // temp need to set up a data structure to get my inventory, (inventory loader class needs to created(takes text input))
     private static final int gap = 2;
-    private ShapeRenderer sr;
     private int[][] inventory;
     private TextureRegion[] loadedTextures;
     private ItemTile[][] texturedInventory;
@@ -33,8 +33,7 @@ public class InventoryState extends BaseSubState{
     private int ROWS;
     private int COLUMNS;
     private Texture itemSet;
-    private float WIDTH;
-    private float HEIGHT;
+    private TextureRegion frame;
 
     public enum Items {
         EMPTY(0),
@@ -48,20 +47,22 @@ public class InventoryState extends BaseSubState{
         }
     }
 
-    public InventoryState(GameStateManager gsm,InventoryManager viewInv, float x, float y,float x2, float y2) {
+    public InventoryState(GameStateManager gsm,InventoryManager viewInv, float x, float y,float width, float height) {
         super(gsm);
         this.inventoryManager = viewInv;
         this.x = x;
         this.y = y;
-        this.x2 = x2;
-        this.y2 = y2;
         this.ROWS = inventoryManager.getRows();
         this.COLUMNS = inventoryManager.getColumns();
-        this.WIDTH = x2 - x;
-        this.HEIGHT = y2 - y;
+        this.WIDTH = width;
+        this.HEIGHT = height;
+        ResourceManager.loadTexture("inventory","tilesets/inventory.png");
+        Log.print(ROWS);
+        Log.print(COLUMNS);
         itemSet = ResourceManager.getTexture("items");//load the item set in
+        frame = new TextureRegion(ResourceManager.getTexture("inventory"));
+        batch = PlayState.getSpriteBatch();
         Log.print("Inventory Screen open!");
-        sr = new ShapeRenderer();
         loadItems();
     }
 
@@ -71,16 +72,17 @@ public class InventoryState extends BaseSubState{
         for(int i = 0;i < ROWS; i++){
             for(int j = 0;j < COLUMNS;j++){
                 if(inventory[i][j] == Items.SHOVEL.itemID){
-                    temp[i][j] = new Shovel(x + (j* (8  + gap) - 10), y + (i*(8 + gap)) ,Items.SHOVEL.itemID,loadedTextures[Items.SHOVEL.itemID]);
+                    temp[i][j] = new Shovel((this.x - WIDTH/4) + (j* (Variables.ITEMTILEWIDTH  + gap)), (this.y ) + (i*(Variables.ITEMTILEHEIGHT + gap)) ,Items.SHOVEL.itemID,loadedTextures[Items.SHOVEL.itemID]);
                 }
                 if(inventory[i][j] == Items.EMPTY.itemID){
-                    temp[i][j] = new Empty(x + (j* (8  + gap) - 10), y + (i*(8 + gap)) ,Items.EMPTY.itemID,loadedTextures[Items.EMPTY.itemID]);
+                    temp[i][j] = new Empty((this.x - WIDTH/4) + (j* (Variables.ITEMTILEWIDTH  + gap)), (this.y ) + (i*(Variables.ITEMTILEHEIGHT + gap)) ,Items.EMPTY.itemID,loadedTextures[Items.EMPTY.itemID]);
                 }
                 if(inventory[i][j] == Items.SWORD.itemID){
-                    temp[i][j] = new Sword(x + (j* (8  + gap) - 10), y + (i*(8 + gap)) ,Items.SWORD.itemID,loadedTextures[Items.SWORD.itemID]);
+                    temp[i][j] = new Sword((this.x - WIDTH/4) + (j* (Variables.ITEMTILEWIDTH + gap) ), (this.y ) + (i*(Variables.ITEMTILEHEIGHT + gap)) ,Items.SWORD.itemID,loadedTextures[Items.SWORD.itemID]);
                 }
             }
         }
+        // for some reason when we move away, the items slide off the screen to the left
         return temp;
     }
 
@@ -103,18 +105,15 @@ public class InventoryState extends BaseSubState{
 
     @Override
     public void render() {
-        batch.setProjectionMatrix(GSManager.getCamera().combined);
-        sr.begin(ShapeRenderer.ShapeType.Filled);
-        sr.setColor(Color.BLACK);
-        sr.rect(x,y, x2, y2);
-        sr.end();
         batch.begin();
         {
+            batch.draw(frame,x - WIDTH/4,y);
             for(int i = 0;i < ROWS; i++){
                 for(int j = 0;j < COLUMNS;j++){
                     texturedInventory[i][j].render(batch); // draw the textured inv
                 }
             }
+
 
         }
         batch.end();
