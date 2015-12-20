@@ -11,6 +11,7 @@ import com.mabezdev.space2d.states.SubStates.BaseSubState;
 import com.mabezdev.space2d.states.SubStates.InventoryState;
 import com.mabezdev.space2d.util.FileLoader;
 import com.mabezdev.space2d.util.Log;
+import com.mabezdev.space2d.util.UniqueID;
 import com.mabezdev.space2d.world.InventoryManager;
 
 /**
@@ -24,7 +25,7 @@ public class Chest extends StaticEntity {
     private boolean interactedWith;
     private boolean isLocked;
     private boolean isOpen;
-    private BaseSubState thisInventory;
+    private int inventoryID;
 
     public enum chestState{
         OPEN,
@@ -47,6 +48,7 @@ public class Chest extends StaticEntity {
         chestTextures[0] = new TextureRegion(ResourceManager.getTexture("interactive"),0,0,32,32);
         chestTextures[1] = new TextureRegion(ResourceManager.getTexture("interactive"),32,0,32,32);
         setState(initial);
+        inventoryID = 20000;
     }
 
 
@@ -73,12 +75,18 @@ public class Chest extends StaticEntity {
     @Override
     public void update(float dt) {
         if(currentState == chestState.OPEN){
-            if(PlayState.getGSM().getCurrentSubState()!= GameStateManager.SubState.CHEST){
-                PlayState.getGSM().setSubState(GameStateManager.SubState.CHEST,new InventoryManager(new FileLoader("chestInventory.txt")),null);
+            if(PlayState.getGSM().getCurrentSubState()== GameStateManager.SubState.NONE){
+                int[] id = {UniqueID.getIdentifier()};
+                inventoryID = id[0];
+                PlayState.getGSM().setSubState(GameStateManager.SubState.CHEST,new InventoryManager(new FileLoader("chestInventory.txt")),id);
             }
         } else if(currentState == chestState.CLOSED) {
-            if(PlayState.getGSM().getCurrentSubState()!= GameStateManager.SubState.INVENTORY)
-                PlayState.getGSM().setSubState(GameStateManager.SubState.NONE,null, null);
+            if(PlayState.getGSM().getCurrentSubState() == GameStateManager.SubState.CHEST){
+                if(PlayState.getGSM().getSubStateObject().getStateID() == inventoryID){
+                    PlayState.getGSM().setSubState(GameStateManager.SubState.NONE,null, null);
+                    inventoryID = 20000;
+                }
+            }
         }
     }
 

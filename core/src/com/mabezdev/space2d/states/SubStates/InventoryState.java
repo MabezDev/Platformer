@@ -46,9 +46,10 @@ public class InventoryState extends BaseSubState{
         }
     }
 
-    public InventoryState(GameStateManager gsm,InventoryManager viewInv) {
+    public InventoryState(GameStateManager gsm,InventoryManager viewInv,int ids) {
         super(gsm);
         this.inventoryManager = viewInv;
+        this.stateID = ids;
         this.ROWS = inventoryManager.getRows();
         this.COLUMNS = inventoryManager.getColumns();
         this.WIDTH = GSManager.getCamera().viewportWidth;
@@ -64,6 +65,7 @@ public class InventoryState extends BaseSubState{
         Log.print("Inventory Screen open!");
         loadItems();
     }
+
 
     private Item[][] generateTextured(){
         //generate the textures from the IDS in inventory

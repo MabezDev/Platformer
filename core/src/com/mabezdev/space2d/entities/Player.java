@@ -9,6 +9,7 @@ import com.mabezdev.space2d.managers.GameStateManager;
 import com.mabezdev.space2d.managers.ResourceManager;
 import com.mabezdev.space2d.states.PlayState;
 import com.mabezdev.space2d.util.FileLoader;
+import com.mabezdev.space2d.util.UniqueID;
 import com.mabezdev.space2d.world.InventoryManager;
 
 /**
@@ -21,6 +22,7 @@ public class Player extends Entity {
     private boolean Inventory;
     private boolean canMove;
     private InventoryManager playerManager;
+    private int inventoryID;
 
 
     public Player(float x, float y){
@@ -38,6 +40,7 @@ public class Player extends Entity {
         //eventually will be TextureRegion[] filled with animation states
         playerImage = new TextureRegion(ResourceManager.getTexture("player"),0,0,32,32);
         playerManager = new InventoryManager(new FileLoader("myInventory.txt"));
+        inventoryID = 20000;
     }
 
     @Override
@@ -101,9 +104,18 @@ public class Player extends Entity {
         if(Gdx.input.isKeyJustPressed(Input.Keys.I)){
             setInventory(!Inventory);
             if(Inventory){
-                PlayState.getGSM().setSubState(GameStateManager.SubState.INVENTORY,playerManager,null);
+                if(PlayState.getGSM().getCurrentSubState()== GameStateManager.SubState.NONE){
+                    int[] id = {UniqueID.getIdentifier()};
+                    inventoryID = id[0];
+                    PlayState.getGSM().setSubState(GameStateManager.SubState.INVENTORY,new InventoryManager(new FileLoader("myInventory.txt")),id);
+                }
             } else {
-                PlayState.getGSM().setSubState(GameStateManager.SubState.NONE,null,null);
+                if(PlayState.getGSM().getCurrentSubState() == GameStateManager.SubState.INVENTORY){
+                    if(PlayState.getGSM().getSubStateObject().getStateID() == inventoryID){
+                        PlayState.getGSM().setSubState(GameStateManager.SubState.NONE,null, null);
+                        inventoryID = 20000;
+                    }
+                }
             }
 
         }

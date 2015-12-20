@@ -6,9 +6,7 @@ import com.mabezdev.space2d.states.MenuState;
 import com.mabezdev.space2d.states.OptionsState;
 import com.mabezdev.space2d.states.PlayState;
 import com.mabezdev.space2d.states.SubStates.BaseSubState;
-import com.mabezdev.space2d.states.SubStates.ChestState;
 import com.mabezdev.space2d.states.SubStates.InventoryState;
-import com.mabezdev.space2d.util.Log;
 import com.mabezdev.space2d.world.InventoryManager;
 
 /**
@@ -73,7 +71,7 @@ public class GameStateManager {
         return currentState;
     }
 
-    public void setSubState(SubState s, Object params, float[] id){
+    public void setSubState(SubState s, Object params, int[] id){
         this.currentSubState = s;
         if(subState!=null){
             subState.dispose();
@@ -83,12 +81,12 @@ public class GameStateManager {
         switch (currentSubState){
             case INVENTORY:
                 if(params!=null) {
-                    subState = new InventoryState(this, (InventoryManager) params);
+                    subState = new InventoryState(this, (InventoryManager) params,id[0]);
                 }
                 break;
             case CHEST:
                 if(params!=null) {
-                    subState = new ChestState(this, (InventoryManager) params);
+                    subState = new InventoryState(this, (InventoryManager) params,id[0]);
                 }
                 break;
             case NONE:
