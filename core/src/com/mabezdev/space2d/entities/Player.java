@@ -102,8 +102,7 @@ public class Player extends Entity {
         if(Gdx.input.isKeyJustPressed(Input.Keys.I)){
             setInventory(!Inventory);
             if(Inventory){
-                float[] coords = {this.x,this.y,Variables.GAME_CAMERA_VIEWPORT_WIDTH,Variables.GAME_CAMERA_VIEWPORT_HEIGHT};
-                PlayState.getGSM().setSubState(GameStateManager.SubState.INVENTORY,playerManager,coords);
+                PlayState.getGSM().setSubState(GameStateManager.SubState.INVENTORY,playerManager,null);
                 canMove = false;
             } else {
                 PlayState.getGSM().setSubState(GameStateManager.SubState.NONE,null,null);

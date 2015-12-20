@@ -78,8 +78,8 @@ public class GameStateManager {
 
         switch (currentSubState){
             case INVENTORY:
-                if(xy!=null){
-                    subState = new InventoryState(this,(InventoryManager) params,xy[0],xy[1],xy[2],xy[3]);
+                if(params!=null){
+                    subState = new InventoryState(this,(InventoryManager) params);
                 }
                 break;
             case NONE:

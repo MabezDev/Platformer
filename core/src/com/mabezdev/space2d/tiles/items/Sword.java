@@ -6,10 +6,15 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 /**
  * Created by Mabez on 19/12/2015.
  */
-public class Sword extends ItemTile {
+public class Sword extends Item {
 
     public Sword(float x, float y, int itemID, TextureRegion tileImage) {
         super(x, y, itemID, tileImage);
+    }
+
+    @Override
+    public void doAction() {
+
     }
 
     @Override
