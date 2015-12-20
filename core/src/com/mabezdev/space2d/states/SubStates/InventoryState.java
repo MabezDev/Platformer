@@ -22,7 +22,7 @@ public class InventoryState extends BaseSubState{
     //this UI interacts with the player then sends the actions to the InventoryManager to actually update the content
 
     // temp need to set up a data structure to get my inventory, (inventory loader class needs to created(takes text input))
-    private static final int gap = 2;
+    private static final int gap = 1;
     private int[][] inventory;
     private TextureRegion[] loadedTextures;
     private Item[][] texturedInventory;
@@ -69,17 +69,16 @@ public class InventoryState extends BaseSubState{
         for(int i = 0;i < ROWS; i++){
             for(int j = 0;j < COLUMNS;j++){
                 if(inventory[i][j] == Items.SHOVEL.itemID){
-                    temp[i][j] = new Shovel((this.x) + (j* (Variables.ITEMTILEWIDTH  + gap)), (this.y ) + (i*(Variables.ITEMTILEHEIGHT + gap)) ,Items.SHOVEL.itemID,loadedTextures[Items.SHOVEL.itemID]);
+                    temp[i][j] = new Shovel((this.x  + gap) + (j* (Variables.ITEMTILEWIDTH + gap)), (this.y + gap) + (i*(Variables.ITEMTILEHEIGHT + gap)) ,Items.SHOVEL.itemID,loadedTextures[Items.SHOVEL.itemID]);
                 }
                 if(inventory[i][j] == Items.EMPTY.itemID){
-                    temp[i][j] = new Empty((this.x) + (j* (Variables.ITEMTILEWIDTH  + gap)), (this.y ) + (i*(Variables.ITEMTILEHEIGHT + gap)) ,Items.EMPTY.itemID,loadedTextures[Items.EMPTY.itemID]);
+                    temp[i][j] = new Empty((this.x  + gap) + (j* (Variables.ITEMTILEWIDTH + gap)), (this.y + gap) + (i*(Variables.ITEMTILEHEIGHT + gap)) ,Items.EMPTY.itemID,loadedTextures[Items.EMPTY.itemID]);
                 }
                 if(inventory[i][j] == Items.SWORD.itemID){
-                    temp[i][j] = new Sword((this.x) + (j* (Variables.ITEMTILEWIDTH + gap) ), (this.y ) + (i*(Variables.ITEMTILEHEIGHT + gap)) ,Items.SWORD.itemID,loadedTextures[Items.SWORD.itemID]);
+                    temp[i][j] = new Sword((this.x  + gap) + (j* (Variables.ITEMTILEWIDTH + gap) ), (this.y + gap) + (i*(Variables.ITEMTILEHEIGHT + gap)) ,Items.SWORD.itemID,loadedTextures[Items.SWORD.itemID]);
                 }
             }
         }
-        // for some reason when we move away, the items slide off the screen to the left
         return temp;
     }
 
@@ -87,7 +86,7 @@ public class InventoryState extends BaseSubState{
         int numOfItems = Items.values().length;
         TextureRegion[] temp = new TextureRegion[numOfItems];
         for(int i=0;i<temp.length;i++){
-            temp[i] = new TextureRegion(itemSet,i* 8,0,8,8);
+            temp[i] = new TextureRegion(itemSet,i* 32,0,32,32);//8,8 forces texture to that size, 32 is actual res of item
         }
         loadedTextures = temp;
     }

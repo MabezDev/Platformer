@@ -9,7 +9,12 @@ import com.mabezdev.space2d.managers.ResourceManager;
  */
 public class StoneTile extends Tile {
 
-    public StoneTile(float x, float y,float width,float height,int ID){
+    @Override
+    public void update(float dt) {
+
+    }
+
+    public StoneTile(float x, float y, float width, float height, int ID){
         this.x = x;
         this.y = y;
         this.ID = ID;

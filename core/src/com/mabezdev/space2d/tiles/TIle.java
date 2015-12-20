@@ -22,6 +22,8 @@ public abstract class Tile {
 
     public abstract void render(SpriteBatch sb);
 
+    public abstract void update(float dt);
+
     public Rectangle getBounds(){
         return new Rectangle(x,y, TILEWIDTH,TILEHEIGHT);
     }

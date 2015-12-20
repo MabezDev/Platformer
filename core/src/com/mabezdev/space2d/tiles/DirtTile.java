@@ -10,7 +10,12 @@ import com.mabezdev.space2d.managers.ResourceManager;
  */
 public class DirtTile extends Tile {
 
-    public DirtTile(float x, float y,float width,float height,int ID){
+    @Override
+    public void update(float dt) {
+
+    }
+
+    public DirtTile(float x, float y, float width, float height, int ID){
         this.ID = ID;
         this.x = x;
         this.y = y;

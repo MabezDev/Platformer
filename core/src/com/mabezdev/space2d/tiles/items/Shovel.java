@@ -2,6 +2,7 @@ package com.mabezdev.space2d.tiles.items;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.mabezdev.space2d.Variables;
 
 /**
  * Created by Mabez on 19/12/2015.
@@ -18,7 +19,7 @@ public class Shovel extends Item {
     }
 
     @Override
-    public void render(SpriteBatch sb) {
-        sb.draw(tileImage,x,y);
+    public void update(float dt) {
+
     }
 }

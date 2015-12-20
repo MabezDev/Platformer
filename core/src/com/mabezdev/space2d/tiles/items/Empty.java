@@ -9,8 +9,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class Empty extends Item {
 
     @Override
-    public void render(SpriteBatch sb) {
-        sb.draw(tileImage,x,y);
+    public void update(float dt) {
+
     }
 
     @Override
