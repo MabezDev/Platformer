@@ -107,7 +107,7 @@ public class Player extends Entity {
                 if(PlayState.getGSM().getCurrentSubState()== GameStateManager.SubState.NONE){
                     int[] id = {UniqueID.getIdentifier()};
                     inventoryID = id[0];
-                    PlayState.getGSM().setSubState(GameStateManager.SubState.INVENTORY,new InventoryManager(new FileLoader("myInventory.txt")),id);
+                    PlayState.getGSM().setSubState(GameStateManager.SubState.INVENTORY,playerManager,id);
                 }
             } else {
                 if(PlayState.getGSM().getCurrentSubState() == GameStateManager.SubState.INVENTORY){
