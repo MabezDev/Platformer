@@ -1,6 +1,5 @@
 package com.mabezdev.space2d.states.SubStates;
 
-
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mabezdev.space2d.Variables;
@@ -16,9 +15,9 @@ import com.mabezdev.space2d.util.Log;
 import com.mabezdev.space2d.world.InventoryManager;
 
 /**
- * Created by Mabez on 18/12/2015.
+ * Created by Mabez on 20/12/2015.
  */
-public class InventoryState extends BaseSubState{
+public class ChestState extends BaseSubState {
 
     //this UI interacts with the player then sends the actions to the InventoryManager to actually update the content
 
@@ -46,7 +45,7 @@ public class InventoryState extends BaseSubState{
         }
     }
 
-    public InventoryState(GameStateManager gsm,InventoryManager viewInv) {
+    public ChestState(GameStateManager gsm,InventoryManager viewInv) {
         super(gsm);
         this.inventoryManager = viewInv;
         this.ROWS = inventoryManager.getRows();
@@ -61,7 +60,7 @@ public class InventoryState extends BaseSubState{
         this.x = GSManager.getCamera().position.x - (frame.getRegionWidth()/2);
         this.y = GSManager.getCamera().position.y - (frame.getRegionHeight()/3);
         this.accessor.setCanMove(false);
-        Log.print("Inventory Screen open!");
+        Log.print("Chest Screen open!");
         loadItems();
     }
 
@@ -125,6 +124,6 @@ public class InventoryState extends BaseSubState{
     public void dispose() {
         this.accessor.setCanMove(true);
         this.inventoryManager.saveInventory();
-        Log.print("Inventory Screen closed!");
+        Log.print("Chest Screen closed!");
     }
 }

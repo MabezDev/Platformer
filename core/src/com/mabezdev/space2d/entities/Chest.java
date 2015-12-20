@@ -4,8 +4,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mabezdev.space2d.Variables;
+import com.mabezdev.space2d.managers.GameStateManager;
 import com.mabezdev.space2d.managers.ResourceManager;
+import com.mabezdev.space2d.states.PlayState;
+import com.mabezdev.space2d.states.SubStates.BaseSubState;
+import com.mabezdev.space2d.states.SubStates.InventoryState;
+import com.mabezdev.space2d.util.FileLoader;
 import com.mabezdev.space2d.util.Log;
+import com.mabezdev.space2d.world.InventoryManager;
 
 /**
  * Created by Mabez on 17/12/2015.
@@ -18,6 +24,7 @@ public class Chest extends StaticEntity {
     private boolean interactedWith;
     private boolean isLocked;
     private boolean isOpen;
+    private BaseSubState thisInventory;
 
     public enum chestState{
         OPEN,
@@ -39,8 +46,6 @@ public class Chest extends StaticEntity {
         chestTextures = new TextureRegion[2];
         chestTextures[0] = new TextureRegion(ResourceManager.getTexture("interactive"),0,0,32,32);
         chestTextures[1] = new TextureRegion(ResourceManager.getTexture("interactive"),32,0,32,32);
-        //default close, maybe add param to ask
-
         setState(initial);
     }
 
@@ -67,6 +72,14 @@ public class Chest extends StaticEntity {
 
     @Override
     public void update(float dt) {
+        if(currentState == chestState.OPEN){
+            if(PlayState.getGSM().getCurrentSubState()!= GameStateManager.SubState.CHEST){
+                PlayState.getGSM().setSubState(GameStateManager.SubState.CHEST,new InventoryManager(new FileLoader("chestInventory.txt")),null);
+            }
+        } else if(currentState == chestState.CLOSED) {
+            if(PlayState.getGSM().getCurrentSubState()!= GameStateManager.SubState.INVENTORY)
+                PlayState.getGSM().setSubState(GameStateManager.SubState.NONE,null, null);
+        }
     }
 
     public void setState(chestState b){
@@ -86,7 +99,6 @@ public class Chest extends StaticEntity {
                 break;
 
         }
-        Log.print("Chest is currently: "+currentState.toString());
     }
 
     public chestState getChestState(){

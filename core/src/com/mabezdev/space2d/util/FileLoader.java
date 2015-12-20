@@ -32,7 +32,6 @@ public class FileLoader {
         while (reader.hasNextLine()) {
             lines1.add(reader.nextLine());
         }
-        Log.print(lines1);
         return lines1.toArray(new String[lines1.size()]);
     }
 

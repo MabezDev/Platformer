@@ -57,6 +57,10 @@ public class Player extends Entity {
         this.handleRetardation();
     }
 
+    public void setCanMove(boolean b){
+        canMove = b;
+    }
+
 
 
     private void handleRetardation(){
@@ -93,22 +97,20 @@ public class Player extends Entity {
             if (Gdx.input.isKeyPressed(Input.Keys.S)) {
                 this.move(Direction.DOWN);
             }
-            if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
-                setAction(true);
-            } else {
-                setAction(false);
-            }
         }
         if(Gdx.input.isKeyJustPressed(Input.Keys.I)){
             setInventory(!Inventory);
             if(Inventory){
                 PlayState.getGSM().setSubState(GameStateManager.SubState.INVENTORY,playerManager,null);
-                canMove = false;
             } else {
                 PlayState.getGSM().setSubState(GameStateManager.SubState.NONE,null,null);
-                canMove = true;
             }
 
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
+            setAction(true);
+        } else {
+            setAction(false);
         }
     }
 

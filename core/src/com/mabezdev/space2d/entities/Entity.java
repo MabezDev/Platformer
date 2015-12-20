@@ -188,7 +188,7 @@ public abstract class Entity {
         }
 
         //make sure that we are not already colliding with up,down,left,or,right
-        if(!blocking) {
+        if(!blocking) { //might ned to remove this but keeping for now as makes sliding along wall smoother
             //check tile above and to the right
             if (up && right) {
                 if (currentColumn < Variables.WORLD_COLUMNS - 1 && currentRow < Variables.WORLD_ROWS - 1) {

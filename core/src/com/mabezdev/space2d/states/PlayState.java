@@ -36,8 +36,8 @@ public class PlayState extends BaseState {
     private static float WORLD_WIDTH;
     private static float WORLD_HEIGHT;
     private static Tile[][] world;
-    private ArrayList<Entity> entities;
-    private Player player;
+    private static ArrayList<Entity> entities;
+    private static Player player;
     private static final float cameraLerp = 0.1f;
 
 
@@ -67,15 +67,18 @@ public class PlayState extends BaseState {
         Variables.WORLD_HEIGHT = (WORLD_HEIGHT);
         Variables.WORLD_ROWS = ROWS;
         Variables.WORLD_COLUMNS = COLUMNS;
-        Chest myChest = new Chest(2*Variables.TILEWIDTH,2*Variables.TILEHEIGHT, Chest.chestState.OPEN);
+
         Chest myChest2 = new Chest(1*Variables.TILEWIDTH,1*Variables.TILEHEIGHT, Chest.chestState.CLOSED);
         entities.add(myChest2);
-        entities.add(myChest);
         entities.add(player);
     }
 
     public static SpriteBatch getSpriteBatch() {
         return sb;
+    }
+
+    public static Player getPlayer(){
+        return player;
     }
 
     public static GameStateManager getGSM(){

@@ -6,7 +6,9 @@ import com.mabezdev.space2d.states.MenuState;
 import com.mabezdev.space2d.states.OptionsState;
 import com.mabezdev.space2d.states.PlayState;
 import com.mabezdev.space2d.states.SubStates.BaseSubState;
+import com.mabezdev.space2d.states.SubStates.ChestState;
 import com.mabezdev.space2d.states.SubStates.InventoryState;
+import com.mabezdev.space2d.util.Log;
 import com.mabezdev.space2d.world.InventoryManager;
 
 /**
@@ -24,6 +26,7 @@ public class GameStateManager {
     public enum SubState {
         PAUSED,
         INVENTORY,
+        CHEST,
         NONE
     }
 
@@ -70,23 +73,36 @@ public class GameStateManager {
         return currentState;
     }
 
-    public void setSubState(SubState s, Object params, float[] xy){
+    public void setSubState(SubState s, Object params, float[] id){
         this.currentSubState = s;
         if(subState!=null){
             subState.dispose();
         }
+        //check if already in inventory if are, then dont open new state
 
         switch (currentSubState){
             case INVENTORY:
-                if(params!=null){
-                    subState = new InventoryState(this,(InventoryManager) params);
+                if(params!=null) {
+                    subState = new InventoryState(this, (InventoryManager) params);
+                }
+                break;
+            case CHEST:
+                if(params!=null) {
+                    subState = new ChestState(this, (InventoryManager) params);
                 }
                 break;
             case NONE:
                 subState = null;
                 break;
         }
+    }
 
+    public BaseSubState getSubStateObject(){
+        return subState;
+    }
+
+    public SubState getCurrentSubState(){
+        return currentSubState;
     }
 
     public void update(float dt) {

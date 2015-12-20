@@ -15,11 +15,11 @@ public class MapGenerator {
     private static BufferedWriter myWriter;
 
     public MapGenerator(String name) throws IOException{
-        lines[0] = "1,1,1,1,1,1,1,1,1,1,1,1,1,1,1";
-        lines[1] = "1,1,1,1,1,1,1,1,1,1,1,1,1,1,1";
-        lines[2] = "1,1,1,1,2,2,1,1,1,1,1,1,1,1,1";
-        lines[3] = "1,1,1,1,1,1,1,1,1,1,1,1,1,1,1";
-        lines[4] = "1,1,1,1,1,1,1,1,1,1,1,1,1,1,1";
+        lines[0] = "1,1,1,1,1,1,1,1,1,1,1,1,1,1,";
+        lines[1] = "1,1,1,1,1,1,1,1,1,1,1,1,1,1,";
+        lines[2] = "1,1,1,1,2,2,1,1,1,1,1,1,1,1,";
+        lines[3] = "1,1,1,1,1,1,1,1,1,1,1,1,1,1,";
+        lines[4] = "1,1,1,1,1,1,1,1,1,1,1,1,1,1,";
 
         myWriter = new BufferedWriter(new FileWriter(name));
     }
