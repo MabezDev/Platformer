@@ -20,12 +20,11 @@ public class MapLoader {
 
     private float WIDTH;
     private float HEIGHT;
-    private static int[][] GRID;
-    private static String path;
-    private static String[] lines;
-    private static int ROWS;
-    private static int COLUMNS;
-    private static Scanner reader;
+    private int[][] GRID;
+    private String path;
+    private String[] lines;
+    private int ROWS;
+    private int COLUMNS;
 
     //Tile type with id's setups
     private enum TILES{
@@ -46,12 +45,12 @@ public class MapLoader {
     }
 
     public MapLoader(FileLoader myfileLoader){ //FileLoader can be replaced with OnlineStreaming version when it gets to
+        GRID = myfileLoader.getData();
         ROWS = myfileLoader.getRows();
         COLUMNS = myfileLoader.getColumns();
-        GRID = myfileLoader.getData();
     }
 
-    public static Tile[][] getMap(){
+    public Tile[][] getMap(){
         //compare ints in GRID to TILES to get the Texture
         Tile[][] tempTiles = new Tile[ROWS][COLUMNS];
         for(int i = 0; i < ROWS;i++){
@@ -70,16 +69,11 @@ public class MapLoader {
         return tempTiles;
     }
 
-    public static int getRows(){
+    public int getRows(){
         return ROWS;
     }
-    public static int getColumns(){
+    public int getColumns(){
         return COLUMNS;
-    }
-
-
-    public static void dispose() throws IOException {
-
     }
 
 }

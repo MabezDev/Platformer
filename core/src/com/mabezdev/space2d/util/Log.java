@@ -39,7 +39,7 @@ public class Log {
     public static void print(int[][] toPrint){
             int lengthJ = toPrint[0].length;
             for(int i = 0; i < toPrint.length;i++){
-                for(int j = 0; i < lengthJ;i++ ){
+                for(int j = 0; j < lengthJ;i++ ){
                     System.out.println(toPrint[i][j]);
                 }
             }

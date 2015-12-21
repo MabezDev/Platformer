@@ -2,19 +2,17 @@ package com.mabezdev.space2d.util;
 
 import com.badlogic.gdx.Gdx;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
  * Created by Mabez on 18/12/2015.
  */
 public class FileLoader {
 
-    private static Scanner reader;
-    private static String path;
-    private static String[] lines;
+    private static BufferedReader reader;
+    private String path;
+    private String[] lines;
     private int ROWS;
     private int COLUMNS;
 
@@ -28,10 +26,11 @@ public class FileLoader {
 
     public String[] getLines(){
         try {
-            reader = new Scanner(new File(Gdx.files.getLocalStoragePath() + path));
+            reader = new BufferedReader(new FileReader(Gdx.files.getLocalStoragePath() + path));
             ArrayList<String> lines1 = new ArrayList<String>();
-            while (reader.hasNextLine()) {
-                lines1.add(reader.nextLine());
+            String line;
+            while ((line = reader.readLine())!=null) {
+                lines1.add(line);
             }
             reader.close();
             return lines1.toArray(new String[lines1.size()]);

@@ -18,7 +18,7 @@ public class InventoryManager {
 
     //each entity should have an inventory manager attached to it
 
-    public InventoryManager(FileLoader fileLoader){ //FileLoader can be replaced with OnlineStreaming version when it gets to
+    public InventoryManager(FileLoader fileLoader){ //FileLoader can be replaced with DataStreamLoader( for online)
         valInventory = fileLoader.getData();
         ROWS = fileLoader.getRows();
         COLUMNS = fileLoader.getColumns();
@@ -28,6 +28,11 @@ public class InventoryManager {
 
     public int[][] getInventory(){
         return valInventory;
+    }
+
+    public void refreshData(){
+        valInventory = fileLoader.getData();
+        Log.print("Refreshing data from : "+fileLoader.getFilePath());
     }
 
 

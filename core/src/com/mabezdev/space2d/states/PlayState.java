@@ -26,7 +26,7 @@ import java.util.ArrayList;
 public class PlayState extends BaseState {
 
     protected static final float unitScale = 1/4f;
-    private MapLoader mapLoaderLoader;
+    private MapLoader mapLoader;
     private MapGenerator mapGenerator;
     private String worldFile = "world.txt";
     private static SpriteBatch sb;
@@ -92,10 +92,10 @@ public class PlayState extends BaseState {
         }catch (IOException e){
             Log.print(e.toString());
         }
-        mapLoaderLoader = new MapLoader(new FileLoader(worldFile));
-        ROWS = MapLoader.getRows();
-        COLUMNS = MapLoader.getColumns();
-        return mapLoaderLoader.getMap();
+        mapLoader = new MapLoader(new FileLoader(worldFile));
+        ROWS = mapLoader.getRows();
+        COLUMNS = mapLoader.getColumns();
+        return mapLoader.getMap();
     }
 
     @Override

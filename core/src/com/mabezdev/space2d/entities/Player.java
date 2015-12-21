@@ -23,6 +23,7 @@ public class Player extends Entity {
     private boolean canMove;
     private InventoryManager playerManager;
     private int inventoryID;
+    private static final String inventoryFile = "myInventory.txt";
 
 
     public Player(float x, float y){
@@ -39,7 +40,7 @@ public class Player extends Entity {
         canMove = true;
         //eventually will be TextureRegion[] filled with animation states
         playerImage = new TextureRegion(ResourceManager.getTexture("player"),0,0,32,32);
-        playerManager = new InventoryManager(new FileLoader("myInventory.txt"));
+        playerManager = new InventoryManager(new FileLoader(inventoryFile));
         inventoryID = 20000;
     }
 

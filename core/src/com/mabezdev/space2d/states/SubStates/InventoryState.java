@@ -33,6 +33,8 @@ public class InventoryState extends BaseSubState{
     private Texture itemSet;
     private TextureRegion frame;
     private Player accessor;
+    private float updateTime = 0;
+    private float updateTimer = 1f;
 
     public enum Items {
         EMPTY(0),
@@ -54,15 +56,17 @@ public class InventoryState extends BaseSubState{
         this.COLUMNS = inventoryManager.getColumns();
         this.WIDTH = GSManager.getCamera().viewportWidth;
         this.HEIGHT = GSManager.getCamera().viewportHeight;
+
         ResourceManager.loadTexture("inventory","tilesets/inventory.png");
         itemSet = ResourceManager.getTexture("items");//load the item set in
         frame = new TextureRegion(ResourceManager.getTexture("inventory"));
         batch = PlayState.getSpriteBatch();
+
         this.accessor = PlayState.getPlayer();
         this.x = GSManager.getCamera().position.x - (frame.getRegionWidth()/2);
         this.y = GSManager.getCamera().position.y - (frame.getRegionHeight()/3);
         this.accessor.setCanMove(false);
-        Log.print("Inventory Screen open!");
+        Log.print("Inventory Screen with ID: "+stateID+" open!");
         loadItems();
     }
 
@@ -99,6 +103,12 @@ public class InventoryState extends BaseSubState{
 
     @Override
     public void update(float dt) {
+        if(updateTime > updateTimer){
+            inventoryManager.refreshData();
+            updateTime = 0;
+        } else {
+            updateTime += dt;
+        }
         inventory = inventoryManager.getInventory();//get the actual inventory
         texturedInventory = generateTextured();//generate the textures that the user sees
     }
@@ -127,6 +137,6 @@ public class InventoryState extends BaseSubState{
     public void dispose() {
         this.accessor.setCanMove(true);
         this.inventoryManager.saveInventory();
-        Log.print("Inventory Screen closed!");
+        Log.print("Inventory Screen with ID: "+stateID+" closed!");
     }
 }
