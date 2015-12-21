@@ -118,4 +118,13 @@ public class GameStateManager {
             subState.render();
         }
     }
+
+    public void dispose(){
+        if(!(subState==null)){
+            subState.dispose();
+        }
+        state.dispose();
+
+
+    }
 }

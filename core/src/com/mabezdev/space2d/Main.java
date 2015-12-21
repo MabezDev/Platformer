@@ -29,4 +29,10 @@ public class Main extends ApplicationAdapter {
 		myGsm.render();
 		Gdx.graphics.setTitle("SPACE2D FPS: "+Integer.toString(Gdx.graphics.getFramesPerSecond()));
 	}
+
+	@Override
+	public void dispose(){
+		myGsm.dispose();
+		//disposes the current states (thus saving data)
+	}
 }
