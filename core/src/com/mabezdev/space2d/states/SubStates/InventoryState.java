@@ -1,8 +1,11 @@
 package com.mabezdev.space2d.states.SubStates;
 
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector3;
 import com.mabezdev.space2d.Variables;
 import com.mabezdev.space2d.entities.Player;
 import com.mabezdev.space2d.managers.GameStateManager;
@@ -111,6 +114,33 @@ public class InventoryState extends BaseSubState{
         }
         inventory = inventoryManager.getInventory();//get the actual inventory
         texturedInventory = generateTextured();//generate the textures that the user sees
+        updateCursor();
+
+    }
+
+    private void updateCursor(){
+        // tad buggy needs fixing
+        float mouseX = getMouse().x;
+        float mouseY = getMouse().y;
+        for(int i = 0; i < inventory.length;i++){
+            for(int j =0;j < inventory[0].length;j++){
+                //if current mouse x & y are in a item slot
+                //render a highlight (black hollow box) around that shape also update the index
+                float itemX = texturedInventory[i][j].getX();
+                float itemY = texturedInventory[i][j].getY();
+                if(mouseX > itemX && mouseX < (itemX + 8) && mouseY > itemY && mouseY < (itemX + 8)){
+                    //draw selector at
+                    Log.print(itemX+","+itemY);
+                    Log.print(mouseX+","+mouseY);
+                    Log.print("Currently Selected: "+texturedInventory[i][j].getItemID());
+                }
+            }
+
+        }
+    }
+
+    private Vector3 getMouse(){
+        return PlayState.getGSM().getCamera().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
     }
 
     @Override
