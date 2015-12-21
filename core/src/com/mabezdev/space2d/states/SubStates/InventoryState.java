@@ -131,6 +131,7 @@ public class InventoryState extends BaseSubState{
 
     @Override
     public void handleInput() {
+        //get mouse of do keyboard input?
     }
 
     @Override
