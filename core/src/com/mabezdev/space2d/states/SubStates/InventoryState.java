@@ -128,7 +128,7 @@ public class InventoryState extends BaseSubState{
                 //render a highlight (black hollow box) around that shape also update the index
                 float itemX = texturedInventory[i][j].getX();
                 float itemY = texturedInventory[i][j].getY();
-                if(mouseX > itemX && mouseX < (itemX + 8) && mouseY > itemY && mouseY < (itemX + 8)){
+                if(mouseX > itemX && mouseX < (itemX + 8) && mouseY > itemY && mouseY < (itemY + 8)){
                     //draw selector at
                     Log.print(itemX+","+itemY);
                     Log.print(mouseX+","+mouseY);
