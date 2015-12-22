@@ -2,9 +2,11 @@ package com.mabezdev.space2d.states.SubStates;
 
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.mabezdev.space2d.Variables;
 import com.mabezdev.space2d.entities.Player;
@@ -35,9 +37,12 @@ public class InventoryState extends BaseSubState{
     private int COLUMNS;
     private Texture itemSet;
     private TextureRegion frame;
+    private TextureRegion selectorImage;
     private Player accessor;
     private float updateTime = 0;
     private float updateTimer = 1f;
+    private Vector2 selector;
+    private Vector2 index;
 
     public enum Items {
         EMPTY(0),
@@ -61,8 +66,13 @@ public class InventoryState extends BaseSubState{
         this.HEIGHT = GSManager.getCamera().viewportHeight;
 
         ResourceManager.loadTexture("inventory","tilesets/inventory.png");
+        ResourceManager.loadTexture("selector","tilesets/selector.png");
+
+        //selector = new Vector2(17,82);
+        selector = new Vector2(Integer.MAX_VALUE,Integer.MAX_VALUE);//render miles of screen
         itemSet = ResourceManager.getTexture("items");//load the item set in
         frame = new TextureRegion(ResourceManager.getTexture("inventory"));
+        selectorImage = new TextureRegion(ResourceManager.getTexture("selector"));
         batch = PlayState.getSpriteBatch();
 
         this.accessor = PlayState.getPlayer();
@@ -71,6 +81,17 @@ public class InventoryState extends BaseSubState{
         this.accessor.setCanMove(false);
         Log.print("Inventory Screen with ID: "+stateID+" open!");
         loadItems();
+
+        Gdx.input.setInputProcessor(new InputAdapter() {
+            @Override
+            public boolean touchDown (int x, int y, int pointer, int button) {
+                if (button == Input.Buttons.LEFT) {
+                    handleMouseClickEvent();
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
 
@@ -130,9 +151,8 @@ public class InventoryState extends BaseSubState{
                 float itemY = texturedInventory[i][j].getY();
                 if(mouseX > itemX && mouseX < (itemX + 8) && mouseY > itemY && mouseY < (itemY + 8)){
                     //draw selector at
-                    Log.print(itemX+","+itemY);
-                    Log.print(mouseX+","+mouseY);
-                    Log.print("Currently Selected: "+texturedInventory[i][j].getItemID());
+                    selector = new Vector2(itemX,itemY);
+                    index = new Vector2(i,j);
                 }
             }
 
@@ -153,15 +173,22 @@ public class InventoryState extends BaseSubState{
                     texturedInventory[i][j].render(batch); // draw the textured inv
                 }
             }
+            batch.draw(selectorImage,selector.x,selector.y);
+
 
 
         }
         batch.end();
     }
 
+    private void handleMouseClickEvent(){
+        Log.print("Clicked on: " + texturedInventory[(int) index.x][(int) index.y].getItemID());
+        //handle item grabbing and re arranging here
+    }
+
     @Override
     public void handleInput() {
-        //get mouse of do keyboard input?
+
     }
 
     @Override

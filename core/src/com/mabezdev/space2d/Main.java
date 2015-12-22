@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mabezdev.space2d.managers.GameStateManager;
+import com.mabezdev.space2d.util.DesktopInputProccessor;
 
 public class Main extends ApplicationAdapter {
 	private OrthographicCamera Camera;
@@ -18,6 +19,8 @@ public class Main extends ApplicationAdapter {
 		Variables.HEIGHT = Gdx.graphics.getHeight();
 		Camera = new OrthographicCamera(Variables.WIDTH,Variables.HEIGHT);
 		myGsm = new GameStateManager(Camera);
+		// do check for what os later
+		//Gdx.input.setInputProcessor(new DesktopInputProccessor());
 	}
 
 	@Override
