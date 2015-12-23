@@ -13,6 +13,7 @@ import com.mabezdev.space2d.entities.Player;
 import com.mabezdev.space2d.managers.GameStateManager;
 import com.mabezdev.space2d.managers.ResourceManager;
 import com.mabezdev.space2d.states.PlayState;
+import com.mabezdev.space2d.tiles.Tile;
 import com.mabezdev.space2d.tiles.items.Empty;
 import com.mabezdev.space2d.tiles.items.Item;
 import com.mabezdev.space2d.tiles.items.Shovel;
@@ -43,6 +44,7 @@ public class InventoryState extends BaseSubState{
     private float updateTimer = 1f;
     private Vector2 selector;
     private Vector2 index;
+    private Item selectedItem;
 
     public enum Items {
         EMPTY(0),
@@ -86,7 +88,13 @@ public class InventoryState extends BaseSubState{
             @Override
             public boolean touchDown (int x, int y, int pointer, int button) {
                 if (button == Input.Buttons.LEFT) {
-                    handleMouseClickEvent();
+                    if(selectedItem==null){
+                        selectedItem =  getItemOnClick();
+                    } else {
+                        inventoryManager.addToInventory(selectedItem);
+                        selectedItem = null;
+                    }
+
                     return true;
                 }
                 return false;
@@ -109,6 +117,8 @@ public class InventoryState extends BaseSubState{
                 if(inventory[i][j] == Items.SWORD.itemID){
                     temp[i][j] = new Sword((this.x  + gap) + (j* (Variables.ITEMTILEWIDTH + gap) ), (this.y + gap) + (i*(Variables.ITEMTILEHEIGHT + gap)) ,Items.SWORD.itemID,loadedTextures[Items.SWORD.itemID]);
                 }
+                temp[i][j].setRow(i);
+                temp[i][j].setColumn(j);
             }
         }
         return temp;
@@ -128,6 +138,9 @@ public class InventoryState extends BaseSubState{
     @Override
     public void update(float dt) {
         if(updateTime > updateTimer){
+            //save what this user has done
+            inventoryManager.saveInventory();
+            //load in any updates if any(from other users)
             inventoryManager.refreshData();
             updateTime = 0;
         } else {
@@ -136,6 +149,10 @@ public class InventoryState extends BaseSubState{
         inventory = inventoryManager.getInventory();//get the actual inventory
         texturedInventory = generateTextured();//generate the textures that the user sees
         updateCursor();
+        if(selectedItem!=null){
+            //remove from inventory, put in tempory storage (selectedItem variable)
+            inventoryManager.removeFromInventory(selectedItem);
+        }
 
     }
 
@@ -173,7 +190,13 @@ public class InventoryState extends BaseSubState{
                     texturedInventory[i][j].render(batch); // draw the textured inv
                 }
             }
-            batch.draw(selectorImage,selector.x,selector.y);
+            if(selectedItem==null) {
+                batch.draw(selectorImage, selector.x, selector.y);
+            } else {
+                selectedItem.setX(getMouse().x);
+                selectedItem.setY(getMouse().y);
+                selectedItem.render(batch);
+            }
 
 
 
@@ -181,9 +204,9 @@ public class InventoryState extends BaseSubState{
         batch.end();
     }
 
-    private void handleMouseClickEvent(){
-        Log.print("Clicked on: " + texturedInventory[(int) index.x][(int) index.y].getItemID());
-        //handle item grabbing and re arranging here
+    private Item getItemOnClick(){
+        Log.print("Grabbing: " + texturedInventory[(int) index.x][(int) index.y].getItemID());
+        return texturedInventory[(int) index.x][(int) index.y];
     }
 
     @Override
@@ -193,6 +216,11 @@ public class InventoryState extends BaseSubState{
 
     @Override
     public void dispose() {
+        if(selectedItem!=null){
+            // if the item is never put in either player or back in the chest, the put it back in the chest
+            //todo if the chest is full there will be a problem
+            inventoryManager.addToInventory(selectedItem);
+        }
         this.accessor.setCanMove(true);
         this.inventoryManager.saveInventory();
         Log.print("Inventory Screen with ID: "+stateID+" closed!");

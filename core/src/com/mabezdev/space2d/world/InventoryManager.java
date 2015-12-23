@@ -1,5 +1,6 @@
 package com.mabezdev.space2d.world;
 
+import com.mabezdev.space2d.tiles.items.Item;
 import com.mabezdev.space2d.util.FileLoader;
 import com.mabezdev.space2d.util.FileWriter;
 import com.mabezdev.space2d.util.Log;
@@ -35,13 +36,32 @@ public class InventoryManager {
         Log.print("Refreshing data from : "+fileLoader.getFilePath());
     }
 
-
+    @Deprecated
     public void addToInventory(int itemID, int row,int column){
         valInventory[row][column] = itemID;
     }
 
+    public void addToInventory(Item i){
+        for(int x=0; x < valInventory.length;x++) {
+            for(int y=0; y < valInventory[0].length;y++) {
+                if(valInventory[x][y]==0){
+                    Log.print("added the item!");
+                    valInventory[x][y] = i.getItemID();
+                    break;
+                    //break so we only add one!
+                } else {
+                    continue;
+                }
+            }
+        }
+    }
+
     public void removeFromInventory(int row,int column){
         valInventory[row][column] = 0; //zero itemID will be empty
+    }
+
+    public void removeFromInventory(Item i){
+        valInventory[i.getRow()][i.getColumn()] = 0;
     }
 
     public void saveInventory(){

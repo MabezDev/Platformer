@@ -14,6 +14,8 @@ public  abstract class Item extends Tile {
     protected TextureRegion tileImage;
     protected static final float WIDTH = Variables.ITEMTILEWIDTH;
     protected static final float HEIGHT = Variables.ITEMTILEHEIGHT;
+    protected int ROW;
+    protected int COLUMN;
 
     public Item(float x, float y, int itemID , TextureRegion tileImage){
         this.x = x;
@@ -24,6 +26,22 @@ public  abstract class Item extends Tile {
 
     public int getItemID() {
         return itemID;
+    }
+
+    public void setRow(int row){
+        this.ROW = row;
+    }
+
+    public void setColumn(int column){
+        this.COLUMN = column;
+    }
+
+    public int getColumn(){
+        return COLUMN;
+    }
+
+    public int getRow(){
+        return ROW;
     }
 
     public  TextureRegion getTileImage(){
