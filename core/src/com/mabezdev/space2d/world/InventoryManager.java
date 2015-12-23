@@ -41,19 +41,11 @@ public class InventoryManager {
         valInventory[row][column] = itemID;
     }
 
-    public void addToInventory(Item i){
-        for(int x=0; x < valInventory.length;x++) {
-            for(int y=0; y < valInventory[0].length;y++) {
-                if(valInventory[x][y]==0){
-                    Log.print("added the item!");
-                    valInventory[x][y] = i.getItemID();
-                    break;
-                    //break so we only add one!
-                } else {
-                    continue;
-                }
-            }
-        }
+    public void addToInventory(Item i,int row,int column){
+        i.setRow(row);
+        i.setColumn(column);
+        valInventory[row][column] = i.getItemID();
+
     }
 
     public void removeFromInventory(int row,int column){

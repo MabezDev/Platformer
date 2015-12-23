@@ -89,10 +89,20 @@ public class InventoryState extends BaseSubState{
             public boolean touchDown (int x, int y, int pointer, int button) {
                 if (button == Input.Buttons.LEFT) {
                     if(selectedItem==null){
+                        //if no item selected then that mean our next click will be to get an item
                         selectedItem =  getItemOnClick();
+                        inventoryManager.removeFromInventory(selectedItem);
                     } else {
-                        inventoryManager.addToInventory(selectedItem);
-                        selectedItem = null;
+                        if(inventory[(int)index.x][(int)index.y] == 0) {
+                            // adding to a blank space
+                            inventoryManager.addToInventory(selectedItem, (int) index.x, (int) index.y);
+                            selectedItem = null;
+                        } else {
+                            // item swapping done here
+                            Item toSwap = texturedInventory[(int)index.x][(int)index.y];
+                            inventoryManager.addToInventory(selectedItem, (int) index.x, (int) index.y);
+                            selectedItem = toSwap;
+                        }
                     }
 
                     return true;
@@ -149,10 +159,6 @@ public class InventoryState extends BaseSubState{
         inventory = inventoryManager.getInventory();//get the actual inventory
         texturedInventory = generateTextured();//generate the textures that the user sees
         updateCursor();
-        if(selectedItem!=null){
-            //remove from inventory, put in tempory storage (selectedItem variable)
-            inventoryManager.removeFromInventory(selectedItem);
-        }
 
     }
 
@@ -219,7 +225,7 @@ public class InventoryState extends BaseSubState{
         if(selectedItem!=null){
             // if the item is never put in either player or back in the chest, the put it back in the chest
             //todo if the chest is full there will be a problem
-            inventoryManager.addToInventory(selectedItem);
+            //inventoryManager.addToInventory(selectedItem);
         }
         this.accessor.setCanMove(true);
         this.inventoryManager.saveInventory();
