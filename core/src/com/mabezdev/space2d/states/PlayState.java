@@ -39,6 +39,7 @@ public class PlayState extends BaseState {
     private static ArrayList<Entity> entities;
     private static Player player;
     private static final float cameraLerp = 0.1f;
+    private boolean isPaused;
 
 
     public PlayState(GameStateManager gsm) {
@@ -48,6 +49,7 @@ public class PlayState extends BaseState {
         ResourceManager.loadTexture("player","tilesets/playerset.png");
         ResourceManager.loadTexture("interactive","tilesets/interactives.png");
         ResourceManager.loadTexture("items","tilesets/items.png");
+        ResourceManager.loadFont("paused",20,"orangejuice2.ttf");
 
         sb = new SpriteBatch();
         camera = GSManager.getCamera();
@@ -100,15 +102,15 @@ public class PlayState extends BaseState {
 
     @Override
     public void update(float dt) {
-        for(int j=0; j < entities.size();j++){
+        for (int j = 0; j < entities.size(); j++) {
             //update all entities
-            Entity e =  entities.get(j);
+            Entity e = entities.get(j);
             e.update(dt);
             Tile currentTile = world[getRowOfEntity(player)][getColumnOfEntity(player)];
             player.setCurrentTile(currentTile);
 
             //make sure we are not checking player against itself
-            if(!e.equals(player)) {
+            if (!e.equals(player)) {
                 //cast the entity to a StaticEntity
                 StaticEntity t = (StaticEntity) e;
                 // if player is in the same tile as the StaticEntity
@@ -121,11 +123,6 @@ public class PlayState extends BaseState {
                 }
             }
         }
-
-
-
-
-
         updateCamera();
     }
 

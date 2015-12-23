@@ -24,6 +24,7 @@ public class Player extends Entity {
     private InventoryManager playerManager;
     private int inventoryID;
     private static final String inventoryFile = "myInventory.txt";
+    private boolean isPaused;
 
 
     public Player(float x, float y){
@@ -59,6 +60,31 @@ public class Player extends Entity {
         this.handleMapBoundaries(dt);
         //decelerate player with drag
         this.handleRetardation();
+
+        if(isPaused) {
+            if (PlayState.getGSM().getCurrentSubState() == GameStateManager.SubState.NONE) {
+                PlayState.getGSM().setSubState(GameStateManager.SubState.PAUSED, null, null);
+            }
+        } else {
+            if(PlayState.getGSM().getCurrentSubState()== GameStateManager.SubState.PAUSED){
+                PlayState.getGSM().setSubState(GameStateManager.SubState.NONE,null,null);
+            }
+        }
+
+        if(Inventory){
+            if(PlayState.getGSM().getCurrentSubState()== GameStateManager.SubState.NONE){
+                int[] id = {UniqueID.getIdentifier()};
+                inventoryID = id[0];
+                PlayState.getGSM().setSubState(GameStateManager.SubState.INVENTORY,playerManager,id);
+            }
+        } else {
+            if(PlayState.getGSM().getCurrentSubState() == GameStateManager.SubState.INVENTORY){
+                if(PlayState.getGSM().getSubStateObject().getStateID() == inventoryID){
+                    PlayState.getGSM().setSubState(GameStateManager.SubState.NONE,null, null);
+                    inventoryID = 20000;
+                }
+            }
+        }
     }
 
     public void setCanMove(boolean b){
@@ -104,31 +130,27 @@ public class Player extends Entity {
         }
         if(Gdx.input.isKeyJustPressed(Input.Keys.I)){
             setInventory(!Inventory);
-            if(Inventory){
-                if(PlayState.getGSM().getCurrentSubState()== GameStateManager.SubState.NONE){
-                    int[] id = {UniqueID.getIdentifier()};
-                    inventoryID = id[0];
-                    PlayState.getGSM().setSubState(GameStateManager.SubState.INVENTORY,playerManager,id);
-                }
-            } else {
-                if(PlayState.getGSM().getCurrentSubState() == GameStateManager.SubState.INVENTORY){
-                    if(PlayState.getGSM().getSubStateObject().getStateID() == inventoryID){
-                        PlayState.getGSM().setSubState(GameStateManager.SubState.NONE,null, null);
-                        inventoryID = 20000;
-                    }
-                }
-            }
-
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
             setAction(true);
         } else {
             setAction(false);
         }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            isPaused = !isPaused;
+        }
+
     }
 
 
 
+    public boolean getIsPaused(){
+        return isPaused;
+    }
+
+    public void setIsPaused(boolean b){
+        isPaused = b;
+    }
     private void setAction(boolean b){
         Action = b;
     }

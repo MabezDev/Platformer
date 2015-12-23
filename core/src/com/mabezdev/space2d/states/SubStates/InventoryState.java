@@ -199,6 +199,7 @@ public class InventoryState extends BaseSubState{
             if(selectedItem==null) {
                 batch.draw(selectorImage, selector.x, selector.y);
             } else {
+                //selected item shall follow the mouse
                 selectedItem.setX(getMouse().x);
                 selectedItem.setY(getMouse().y);
                 selectedItem.render(batch);

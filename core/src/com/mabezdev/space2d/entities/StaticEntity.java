@@ -12,6 +12,27 @@ public abstract class StaticEntity extends Entity {
 
     public abstract void doAction();
 
+    @Override
+    protected void handleCollisions(float dt){
+
+    }
+
+    @Override
+    protected void handleMapBoundaries(float dt){
+
+
+    }
+
+    @Override
+    public void move(Direction direction){
+
+    }
+
+    @Override
+    public void setCurrentTile(Tile t){
+
+    }
+
 
 
 

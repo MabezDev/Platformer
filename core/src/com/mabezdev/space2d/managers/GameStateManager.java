@@ -7,6 +7,8 @@ import com.mabezdev.space2d.states.OptionsState;
 import com.mabezdev.space2d.states.PlayState;
 import com.mabezdev.space2d.states.SubStates.BaseSubState;
 import com.mabezdev.space2d.states.SubStates.InventoryState;
+import com.mabezdev.space2d.states.SubStates.Paused;
+import com.mabezdev.space2d.util.Log;
 import com.mabezdev.space2d.world.InventoryManager;
 
 /**
@@ -88,6 +90,9 @@ public class GameStateManager {
                 if(params!=null) {
                     subState = new InventoryState(this, (InventoryManager) params,id[0]);
                 }
+                break;
+            case PAUSED:
+                subState = new Paused(this);
                 break;
             case NONE:
                 subState = null;
