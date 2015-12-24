@@ -13,11 +13,7 @@ public abstract class BaseSubState extends BaseState{
     protected float y;
     protected float WIDTH;
     protected float HEIGHT;
-    protected static int stateID;
 
-    public int getStateID(){
-        return stateID;
-    }
 
     public BaseSubState(GameStateManager gsm) {
         super(gsm);

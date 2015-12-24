@@ -13,7 +13,6 @@ import com.mabezdev.space2d.entities.Player;
 import com.mabezdev.space2d.managers.GameStateManager;
 import com.mabezdev.space2d.managers.ResourceManager;
 import com.mabezdev.space2d.states.PlayState;
-import com.mabezdev.space2d.tiles.Tile;
 import com.mabezdev.space2d.tiles.items.Empty;
 import com.mabezdev.space2d.tiles.items.Item;
 import com.mabezdev.space2d.tiles.items.Shovel;
@@ -58,10 +57,9 @@ public class InventoryState extends BaseSubState{
         }
     }
 
-    public InventoryState(GameStateManager gsm,InventoryManager viewInv,int ids) {
+    public InventoryState(GameStateManager gsm,InventoryManager viewInv) {
         super(gsm);
         this.inventoryManager = viewInv;
-        this.stateID = ids;
         this.ROWS = inventoryManager.getRows();
         this.COLUMNS = inventoryManager.getColumns();
         this.WIDTH = GSManager.getCamera().viewportWidth;
@@ -70,8 +68,8 @@ public class InventoryState extends BaseSubState{
         ResourceManager.loadTexture("inventory","tilesets/inventory.png");
         ResourceManager.loadTexture("selector","tilesets/selector.png");
 
-        //selector = new Vector2(17,82);
-        selector = new Vector2(Integer.MAX_VALUE,Integer.MAX_VALUE);//render miles of screen
+        selector = new Vector2(17,82);
+        index = new Vector2(4,0);
         itemSet = ResourceManager.getTexture("items");//load the item set in
         frame = new TextureRegion(ResourceManager.getTexture("inventory"));
         selectorImage = new TextureRegion(ResourceManager.getTexture("selector"));
@@ -81,7 +79,7 @@ public class InventoryState extends BaseSubState{
         this.x = GSManager.getCamera().position.x - (frame.getRegionWidth()/2);
         this.y = GSManager.getCamera().position.y - (frame.getRegionHeight()/3);
         this.accessor.setCanMove(false);
-        Log.print("Inventory Screen with ID: "+stateID+" open!");
+        Log.print("Inventory Screen open!");
         loadItems();
 
         Gdx.input.setInputProcessor(new InputAdapter() {
@@ -228,8 +226,12 @@ public class InventoryState extends BaseSubState{
             //todo if the chest is full there will be a problem
             //inventoryManager.addToInventory(selectedItem);
         }
+        //remove our custom listener
+        Gdx.input.setInputProcessor(null);
+        // set the player back to moving
         this.accessor.setCanMove(true);
+        // save the changes to the file
         this.inventoryManager.saveInventory();
-        Log.print("Inventory Screen with ID: "+stateID+" closed!");
+        Log.print("Inventory Screen closed!");
     }
 }

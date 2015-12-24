@@ -76,18 +76,21 @@ public class Chest extends StaticEntity {
     public void update(float dt) {
         if(currentState == chestState.OPEN){
             if(PlayState.getGSM().getCurrentSubState()== GameStateManager.SubState.NONE){
-                int[] id = {UniqueID.getIdentifier()};
-                inventoryID = id[0];
-                PlayState.getGSM().setSubState(GameStateManager.SubState.CHEST,new InventoryManager(new FileLoader("chestInventory.txt")),id);
+                inventoryID =  UniqueID.getIdentifier();
+                //eventually assign a chest a file with its content
+                PlayState.getGSM().addSubState(new InventoryState(PlayState.getGSM(),new InventoryManager(new FileLoader("chestInventory.txt"))),inventoryID);
+                PlayState.getGSM().setCurrentSubState(GameStateManager.SubState.CHEST);
+                // add code to get the accesors inventory and put them one on top of te other
             }
         } else if(currentState == chestState.CLOSED) {
             if(PlayState.getGSM().getCurrentSubState() == GameStateManager.SubState.CHEST){
-                if(PlayState.getGSM().getSubStateObject().getStateID() == inventoryID){
-                    PlayState.getGSM().setSubState(GameStateManager.SubState.NONE,null, null);
+                if(PlayState.getGSM().isActive(inventoryID)) {
+                    PlayState.getGSM().removeSubState(inventoryID);
+                    PlayState.getGSM().setCurrentSubState(GameStateManager.SubState.NONE);
                     inventoryID = 20000;
                 }
+                }
             }
-        }
     }
 
     public void setState(chestState b){

@@ -3,12 +3,10 @@ package com.mabezdev.space2d.states.SubStates;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mabezdev.space2d.Variables;
 import com.mabezdev.space2d.entities.Player;
 import com.mabezdev.space2d.managers.GameStateManager;
-import com.mabezdev.space2d.managers.ResourceManager;
 import com.mabezdev.space2d.states.PlayState;
 import com.mabezdev.space2d.util.Log;
 
@@ -20,7 +18,6 @@ public class Paused extends BaseSubState {
     private Player accessor;
     private String[] options = {"Resume","Go to menu","Quit"};
     private int index = 0;
-    private static OrthographicCamera hudcam;
 
     public Paused(GameStateManager gsm) {
         super(gsm);
@@ -31,7 +28,6 @@ public class Paused extends BaseSubState {
         this.accessor = PlayState.getPlayer();
         this.accessor.setCanMove(false);
 
-        hudcam = PlayState.getHudCamera();
         batch = new SpriteBatch();
         //menuFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
     }
@@ -72,7 +68,7 @@ public class Paused extends BaseSubState {
                 accessor.setIsPaused(false);
             }
             if(index == 1){
-                PlayState.getGSM().setSubState(GameStateManager.SubState.NONE,null,null);
+                PlayState.getGSM().removeAllSubStates();
                 PlayState.getGSM().setCurrentState(GameStateManager.State.MENU);
             }
             if (index == 2) {

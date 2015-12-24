@@ -11,6 +11,9 @@ import com.mabezdev.space2d.states.SubStates.Paused;
 import com.mabezdev.space2d.util.Log;
 import com.mabezdev.space2d.world.InventoryManager;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /**
  * Created by Mabez on 14/12/2015.
  */
@@ -30,18 +33,19 @@ public class GameStateManager {
         NONE
     }
 
-    public State currentState;
+    private State currentState;
     private BaseState state;
+
     private SubState currentSubState;
-    private BaseSubState subState;
     protected OrthographicCamera camera;
+    private HashMap<Integer,BaseSubState> subStates;
 
     public GameStateManager(OrthographicCamera camera) {
         this.camera = camera;
+        subStates = new HashMap<Integer, BaseSubState>();
         ResourceManager.loadFont("defaultFont",36,"orangejuice2.ttf");
         setCurrentState(State.MENU);
-        setSubState(SubState.NONE, null,null);
-
+        setCurrentSubState(SubState.NONE);
     }
 
     public OrthographicCamera getCamera(){
@@ -73,63 +77,61 @@ public class GameStateManager {
         return currentState;
     }
 
-    public void setSubState(SubState s, Object params, int[] id){
-        this.currentSubState = s;
-        if(subState!=null){
-            subState.dispose();
-        }
-        //check if already in inventory if are, then dont open new state
-
-        switch (currentSubState){
-            case INVENTORY:
-                if(params!=null) {
-                    subState = new InventoryState(this, (InventoryManager) params,id[0]);
-                }
-                break;
-            case CHEST:
-                if(params!=null) {
-                    subState = new InventoryState(this, (InventoryManager) params,id[0]);
-                }
-                break;
-            case PAUSED:
-                subState = new Paused(this);
-                break;
-            case NONE:
-                subState = null;
-                break;
-        }
+    public void addSubState(BaseSubState stateObject,int id){
+        subStates.put(id,stateObject);
     }
 
-    public BaseSubState getSubStateObject(){
-        return subState;
+    public void removeSubState(int id){
+        subStates.get(id).dispose();
+        subStates.remove(id);
+    }
+
+    public boolean isActive(int idToCheck){
+        if(subStates.containsKey(idToCheck)){
+            return true;
+        }
+        return false;
+    }
+
+    public void setCurrentSubState(SubState s){
+        currentSubState = s;
     }
 
     public SubState getCurrentSubState(){
         return currentSubState;
     }
 
+    public void removeAllSubStates(){
+        for (int id : subStates.keySet()) {
+            subStates.get(id).dispose();
+        }
+        setCurrentSubState(SubState.NONE);
+        subStates.clear();
+    }
+
+
+
     public void update(float dt) {
         state.update(dt);
         state.handleInput();
-        if(!currentSubState.equals(SubState.NONE)){
-            subState.update(dt);
-            subState.handleInput();
+        for (int id : subStates.keySet()) {
+           subStates.get(id).update(dt);
+           subStates.get(id).handleInput();
         }
     }
 
     public void render() {
         state.render();
-        if(!currentSubState.equals(SubState.NONE)){
-            subState.render();
+        for (int id : subStates.keySet()) {
+            subStates.get(id).render();
+
         }
     }
 
     public void dispose(){
-        if(!(subState==null)){
-            subState.dispose();
-        }
         state.dispose();
-
-
+        for (int id : subStates.keySet()) {
+            subStates.get(id).dispose();
+        }
     }
 }

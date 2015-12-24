@@ -8,6 +8,9 @@ import com.mabezdev.space2d.Variables;
 import com.mabezdev.space2d.managers.GameStateManager;
 import com.mabezdev.space2d.managers.ResourceManager;
 import com.mabezdev.space2d.states.PlayState;
+import com.mabezdev.space2d.states.SubStates.BaseSubState;
+import com.mabezdev.space2d.states.SubStates.InventoryState;
+import com.mabezdev.space2d.states.SubStates.Paused;
 import com.mabezdev.space2d.util.FileLoader;
 import com.mabezdev.space2d.util.UniqueID;
 import com.mabezdev.space2d.world.InventoryManager;
@@ -25,6 +28,7 @@ public class Player extends Entity {
     private int inventoryID;
     private static final String inventoryFile = "myInventory.txt";
     private boolean isPaused;
+    private int pausedID;
 
 
     public Player(float x, float y){
@@ -43,6 +47,7 @@ public class Player extends Entity {
         playerImage = new TextureRegion(ResourceManager.getTexture("player"),0,0,32,32);
         playerManager = new InventoryManager(new FileLoader(inventoryFile));
         inventoryID = 20000;
+        pausedID = 200000;
     }
 
     @Override
@@ -63,24 +68,29 @@ public class Player extends Entity {
 
         if(isPaused) {
             if (PlayState.getGSM().getCurrentSubState() == GameStateManager.SubState.NONE) {
-                PlayState.getGSM().setSubState(GameStateManager.SubState.PAUSED, null, null);
+                pausedID = UniqueID.getIdentifier();
+                PlayState.getGSM().addSubState(new Paused(PlayState.getGSM()),pausedID);
+                PlayState.getGSM().setCurrentSubState(GameStateManager.SubState.PAUSED);
             }
         } else {
             if(PlayState.getGSM().getCurrentSubState()== GameStateManager.SubState.PAUSED){
-                PlayState.getGSM().setSubState(GameStateManager.SubState.NONE,null,null);
+                PlayState.getGSM().removeSubState(pausedID);
+                PlayState.getGSM().setCurrentSubState(GameStateManager.SubState.NONE);
+                pausedID = 200000;
             }
         }
 
         if(Inventory){
             if(PlayState.getGSM().getCurrentSubState()== GameStateManager.SubState.NONE){
-                int[] id = {UniqueID.getIdentifier()};
-                inventoryID = id[0];
-                PlayState.getGSM().setSubState(GameStateManager.SubState.INVENTORY,playerManager,id);
+                inventoryID = UniqueID.getIdentifier();
+                PlayState.getGSM().addSubState(new InventoryState(PlayState.getGSM(),playerManager),inventoryID);
+                PlayState.getGSM().setCurrentSubState(GameStateManager.SubState.INVENTORY);
             }
         } else {
             if(PlayState.getGSM().getCurrentSubState() == GameStateManager.SubState.INVENTORY){
-                if(PlayState.getGSM().getSubStateObject().getStateID() == inventoryID){
-                    PlayState.getGSM().setSubState(GameStateManager.SubState.NONE,null, null);
+                if(PlayState.getGSM().isActive(inventoryID)){
+                    PlayState.getGSM().removeSubState(inventoryID);
+                    PlayState.getGSM().setCurrentSubState(GameStateManager.SubState.NONE);
                     inventoryID = 20000;
                 }
             }
