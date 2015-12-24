@@ -129,15 +129,16 @@ public class Player extends Entity {
             }
         }
         if(Gdx.input.isKeyJustPressed(Input.Keys.I)){
-            setInventory(!Inventory);
+                setInventory(!Inventory);
+        }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+                isPaused = !isPaused;
+
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
             setAction(true);
         } else {
             setAction(false);
-        }
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            isPaused = !isPaused;
         }
 
     }

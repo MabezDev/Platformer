@@ -41,6 +41,8 @@ public class ResourceManager {
         FreeTypeFontGenerator gen = new FreeTypeFontGenerator(Gdx.files.internal(path));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = size;
+        parameter.minFilter = Texture.TextureFilter.Nearest;
+        parameter.magFilter = Texture.TextureFilter.MipMapLinearNearest;
         BitmapFont font = gen.generateFont(parameter);
         font.setColor(Color.WHITE);
         fonts.put(key,font);

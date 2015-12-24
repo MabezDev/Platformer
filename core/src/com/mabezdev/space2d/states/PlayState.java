@@ -31,6 +31,7 @@ public class PlayState extends BaseState {
     private String worldFile = "world.txt";
     private static SpriteBatch sb;
     private static OrthographicCamera camera;
+    private static OrthographicCamera hudCamera;
     private static int ROWS;
     private static int COLUMNS;
     private static float WORLD_WIDTH;
@@ -49,7 +50,6 @@ public class PlayState extends BaseState {
         ResourceManager.loadTexture("player","tilesets/playerset.png");
         ResourceManager.loadTexture("interactive","tilesets/interactives.png");
         ResourceManager.loadTexture("items","tilesets/items.png");
-        ResourceManager.loadFont("paused",20,"orangejuice2.ttf");
 
         sb = new SpriteBatch();
         camera = GSManager.getCamera();
@@ -69,6 +69,8 @@ public class PlayState extends BaseState {
         Variables.WORLD_HEIGHT = (WORLD_HEIGHT);
         Variables.WORLD_ROWS = ROWS;
         Variables.WORLD_COLUMNS = COLUMNS;
+
+        hudCamera = new OrthographicCamera(Variables.GAME_CAMERA_VIEWPORT_WIDTH,Variables.GAME_CAMERA_VIEWPORT_HEIGHT);
 
         Chest myChest2 = new Chest(1*Variables.TILEWIDTH,1*Variables.TILEHEIGHT, Chest.chestState.CLOSED);
         entities.add(myChest2);
@@ -98,6 +100,10 @@ public class PlayState extends BaseState {
         ROWS = mapLoader.getRows();
         COLUMNS = mapLoader.getColumns();
         return mapLoader.getMap();
+    }
+
+    public static OrthographicCamera getHudCamera(){
+        return hudCamera;
     }
 
     @Override
