@@ -191,7 +191,8 @@ public class InventoryState extends BaseSubState{
     @Override
     public void handleInput() {
         if(MyMouse.isPressed(MyMouse.LEFT)) {
-            if (getMouse().x > getX() && getMouse().x < getX() + Variables.INVENTORY_WIDTH && getMouse().y > getY() && getMouse().y < getY() + Variables.INVENTORY_HEIGHT) {
+            Log.print(getMouse().x+","+getMouse().y);
+            if (getMouse().x > getX() && getMouse().x < (getX() + Variables.INVENTORY_WIDTH) && getMouse().y > getY() && getMouse().y < (getY() + Variables.INVENTORY_HEIGHT)) {
                 //make sure were clicking on the right window
                 Log.print("Touch down at " + getMouse().x + "," + getMouse().y);
                 if (PlayState.getSelectedItem() == null) {
@@ -221,8 +222,6 @@ public class InventoryState extends BaseSubState{
             //todo if the chest is full there will be a problem
             //inventoryManager.addToInventory(selectedItem);
         }
-        //remove our custom listener
-        Gdx.input.setInputProcessor(null);
         // set the player back to moving
         this.accessor.setCanMove(true);
         // save the changes to the file

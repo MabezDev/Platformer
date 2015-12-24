@@ -89,7 +89,6 @@ public class Chest extends StaticEntity {
                         (PlayState.getGSM().getCamera().position.y - (Variables.INVENTORY_HEIGHT))),playerInventoryID);
 
                 PlayState.getGSM().setCurrentSubState(GameStateManager.SubState.CHEST);
-                // add code to get the accesors inventory and put them one on top of te other
             }
         } else if(currentState == chestState.CLOSED) {
             if(PlayState.getGSM().getCurrentSubState() == GameStateManager.SubState.CHEST){
