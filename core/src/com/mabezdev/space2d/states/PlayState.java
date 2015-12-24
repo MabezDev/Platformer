@@ -11,6 +11,7 @@ import com.mabezdev.space2d.entities.StaticEntity;
 import com.mabezdev.space2d.managers.GameStateManager;
 import com.mabezdev.space2d.managers.ResourceManager;
 import com.mabezdev.space2d.tiles.Tile;
+import com.mabezdev.space2d.tiles.items.Item;
 import com.mabezdev.space2d.util.FileLoader;
 import com.mabezdev.space2d.util.Log;
 import com.mabezdev.space2d.world.MapLoader;
@@ -41,6 +42,7 @@ public class PlayState extends BaseState {
     private static Player player;
     private static final float cameraLerp = 0.1f;
     private boolean isPaused;
+    private static Item selectedItem;
 
 
     public PlayState(GameStateManager gsm) {
@@ -76,6 +78,15 @@ public class PlayState extends BaseState {
         entities.add(myChest2);
         entities.add(player);
     }
+
+    public static Item getSelectedItem() {
+        return selectedItem;
+    }
+
+    public static void setSelectedItem(Item myselectedItem) {
+        selectedItem = myselectedItem;
+    }
+
 
     public static SpriteBatch getSpriteBatch() {
         return sb;

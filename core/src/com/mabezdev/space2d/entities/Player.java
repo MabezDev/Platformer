@@ -83,7 +83,8 @@ public class Player extends Entity {
         if(Inventory){
             if(PlayState.getGSM().getCurrentSubState()== GameStateManager.SubState.NONE){
                 inventoryID = UniqueID.getIdentifier();
-                PlayState.getGSM().addSubState(new InventoryState(PlayState.getGSM(),playerManager),inventoryID);
+                PlayState.getGSM().addSubState(new InventoryState(PlayState.getGSM(),playerManager,(PlayState.getGSM().getCamera().position.x - (Variables.INVENTORY_WIDTH/2)),
+                        (PlayState.getGSM().getCamera().position.y - (Variables.INVENTORY_HEIGHT/3))),inventoryID);
                 PlayState.getGSM().setCurrentSubState(GameStateManager.SubState.INVENTORY);
             }
         } else {
@@ -95,6 +96,10 @@ public class Player extends Entity {
                 }
             }
         }
+    }
+
+    public InventoryManager getPlayerManager(){
+        return playerManager;
     }
 
     public void setCanMove(boolean b){

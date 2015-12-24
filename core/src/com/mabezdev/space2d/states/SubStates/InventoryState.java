@@ -43,7 +43,7 @@ public class InventoryState extends BaseSubState{
     private float updateTimer = 1f;
     private Vector2 selector;
     private Vector2 index;
-    private Item selectedItem;
+    //private Item selectedItem;
 
     public enum Items {
         EMPTY(0),
@@ -57,7 +57,7 @@ public class InventoryState extends BaseSubState{
         }
     }
 
-    public InventoryState(GameStateManager gsm,InventoryManager viewInv) {
+    public InventoryState(GameStateManager gsm,InventoryManager viewInv,float x, float y) {
         super(gsm);
         this.inventoryManager = viewInv;
         this.ROWS = inventoryManager.getRows();
@@ -76,8 +76,8 @@ public class InventoryState extends BaseSubState{
         batch = PlayState.getSpriteBatch();
 
         this.accessor = PlayState.getPlayer();
-        this.x = GSManager.getCamera().position.x - (frame.getRegionWidth()/2);
-        this.y = GSManager.getCamera().position.y - (frame.getRegionHeight()/3);
+        this.x = x;
+        this.y = y;
         this.accessor.setCanMove(false);
         Log.print("Inventory Screen open!");
         loadItems();
@@ -86,20 +86,20 @@ public class InventoryState extends BaseSubState{
             @Override
             public boolean touchDown (int x, int y, int pointer, int button) {
                 if (button == Input.Buttons.LEFT) {
-                    if(selectedItem==null){
+                    if(PlayState.getSelectedItem()==null){
                         //if no item selected then that mean our next click will be to get an item
-                        selectedItem =  getItemOnClick();
-                        inventoryManager.removeFromInventory(selectedItem);
+                        PlayState.setSelectedItem(getItemOnClick());
+                        inventoryManager.removeFromInventory(PlayState.getSelectedItem());
                     } else {
                         if(inventory[(int)index.x][(int)index.y] == 0) {
                             // adding to a blank space
-                            inventoryManager.addToInventory(selectedItem, (int) index.x, (int) index.y);
-                            selectedItem = null;
+                            inventoryManager.addToInventory(PlayState.getSelectedItem(), (int) index.x, (int) index.y);
+                            PlayState.setSelectedItem(null);
                         } else {
                             // item swapping done here
                             Item toSwap = texturedInventory[(int)index.x][(int)index.y];
-                            inventoryManager.addToInventory(selectedItem, (int) index.x, (int) index.y);
-                            selectedItem = toSwap;
+                            inventoryManager.addToInventory(PlayState.getSelectedItem(), (int) index.x, (int) index.y);
+                            PlayState.setSelectedItem(toSwap);
                         }
                     }
 
@@ -194,13 +194,13 @@ public class InventoryState extends BaseSubState{
                     texturedInventory[i][j].render(batch); // draw the textured inv
                 }
             }
-            if(selectedItem==null) {
+            if(PlayState.getSelectedItem()==null) {
                 batch.draw(selectorImage, selector.x, selector.y);
             } else {
                 //selected item shall follow the mouse
-                selectedItem.setX(getMouse().x);
-                selectedItem.setY(getMouse().y);
-                selectedItem.render(batch);
+                PlayState.getSelectedItem().setX(getMouse().x);
+                PlayState.getSelectedItem().setY(getMouse().y);
+                PlayState.getSelectedItem().render(batch);
             }
 
 
@@ -221,7 +221,7 @@ public class InventoryState extends BaseSubState{
 
     @Override
     public void dispose() {
-        if(selectedItem!=null){
+        if(PlayState.getSelectedItem()!=null){
             // if the item is never put in either player or back in the chest, the put it back in the chest
             //todo if the chest is full there will be a problem
             //inventoryManager.addToInventory(selectedItem);

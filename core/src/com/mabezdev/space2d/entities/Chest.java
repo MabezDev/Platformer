@@ -26,6 +26,7 @@ public class Chest extends StaticEntity {
     private boolean isLocked;
     private boolean isOpen;
     private int inventoryID;
+    private int playerInventoryID;
 
     public enum chestState{
         OPEN,
@@ -49,6 +50,7 @@ public class Chest extends StaticEntity {
         chestTextures[1] = new TextureRegion(ResourceManager.getTexture("interactive"),32,0,32,32);
         setState(initial);
         inventoryID = 20000;
+        playerInventoryID = 20000;
     }
 
 
@@ -78,7 +80,14 @@ public class Chest extends StaticEntity {
             if(PlayState.getGSM().getCurrentSubState()== GameStateManager.SubState.NONE){
                 inventoryID =  UniqueID.getIdentifier();
                 //eventually assign a chest a file with its content
-                PlayState.getGSM().addSubState(new InventoryState(PlayState.getGSM(),new InventoryManager(new FileLoader("chestInventory.txt"))),inventoryID);
+                PlayState.getGSM().addSubState(new InventoryState(PlayState.getGSM(),new InventoryManager(new FileLoader("chestInventory.txt")),
+                        (PlayState.getGSM().getCamera().position.x - (Variables.INVENTORY_WIDTH/2)),
+                        (PlayState.getGSM().getCamera().position.y + (Variables.INVENTORY_HEIGHT/5))),inventoryID);
+                //add player
+                playerInventoryID = UniqueID.getIdentifier();
+                PlayState.getGSM().addSubState(new InventoryState(PlayState.getGSM(),PlayState.getPlayer().getPlayerManager(),(PlayState.getGSM().getCamera().position.x - (Variables.INVENTORY_WIDTH/2)),
+                        (PlayState.getGSM().getCamera().position.y - (Variables.INVENTORY_HEIGHT))),playerInventoryID);
+
                 PlayState.getGSM().setCurrentSubState(GameStateManager.SubState.CHEST);
                 // add code to get the accesors inventory and put them one on top of te other
             }
@@ -86,8 +95,10 @@ public class Chest extends StaticEntity {
             if(PlayState.getGSM().getCurrentSubState() == GameStateManager.SubState.CHEST){
                 if(PlayState.getGSM().isActive(inventoryID)) {
                     PlayState.getGSM().removeSubState(inventoryID);
+                    PlayState.getGSM().removeSubState(playerInventoryID);
                     PlayState.getGSM().setCurrentSubState(GameStateManager.SubState.NONE);
                     inventoryID = 20000;
+                    playerInventoryID = 20000;
                 }
                 }
             }
