@@ -9,6 +9,7 @@ import com.mabezdev.space2d.managers.GameStateManager;
 import com.mabezdev.space2d.managers.ResourceManager;
 import com.mabezdev.space2d.states.PlayState;
 import com.mabezdev.space2d.states.SubStates.BaseSubState;
+import com.mabezdev.space2d.states.SubStates.HotBarState;
 import com.mabezdev.space2d.states.SubStates.InventoryState;
 import com.mabezdev.space2d.states.SubStates.Paused;
 import com.mabezdev.space2d.util.FileLoader;
@@ -27,8 +28,11 @@ public class Player extends Entity {
     private InventoryManager playerManager;
     private int inventoryID;
     private static final String inventoryFile = "myInventory.txt";
+    private static final String barFile = "itemBar.txt";
     private boolean isPaused;
     private int pausedID;
+    private InventoryManager bar;
+    private int barID;
 
 
     public Player(float x, float y){
@@ -46,6 +50,9 @@ public class Player extends Entity {
         //eventually will be TextureRegion[] filled with animation states
         playerImage = new TextureRegion(ResourceManager.getTexture("player"),0,0,32,32);
         playerManager = new InventoryManager(new FileLoader(inventoryFile));
+        bar = new InventoryManager(new FileLoader(barFile));
+
+        barID = 20000;
         inventoryID = 20000;
         pausedID = 200000;
     }
@@ -84,7 +91,7 @@ public class Player extends Entity {
             if(PlayState.getGSM().getCurrentSubState()== GameStateManager.SubState.NONE){
                 inventoryID = UniqueID.getIdentifier();
                 PlayState.getGSM().addSubState(new InventoryState(PlayState.getGSM(),playerManager,(PlayState.getGSM().getCamera().position.x - (Variables.INVENTORY_WIDTH/2)),
-                        (PlayState.getGSM().getCamera().position.y - (Variables.INVENTORY_HEIGHT/3))),inventoryID);
+                        (PlayState.getGSM().getCamera().position.y - (Variables.INVENTORY_HEIGHT/3)),false,"tilesets/inventory.png"),inventoryID);
                 PlayState.getGSM().setCurrentSubState(GameStateManager.SubState.INVENTORY);
             }
         } else {
@@ -95,6 +102,10 @@ public class Player extends Entity {
                     inventoryID = 20000;
                 }
             }
+        }
+        if(!PlayState.getGSM().isActive(barID)) {
+            barID = UniqueID.getIdentifier();
+            PlayState.getGSM().addSubState(new InventoryState(PlayState.getGSM(),bar,(PlayState.getGSM().getCamera().position.x - (Variables.INVENTORY_WIDTH / 2)),PlayState.getGSM().getCamera().position.y - 60,true,"tilesets/hotbar.png"),barID);
         }
     }
 

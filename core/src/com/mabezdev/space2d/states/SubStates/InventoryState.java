@@ -44,6 +44,7 @@ public class InventoryState extends BaseSubState{
     private float updateTimer = 1f;
     private Vector2 selector;
     private Vector2 index;
+    private boolean canAccessorMove;
     //private Item selectedItem;
 
     public enum Items {
@@ -58,7 +59,7 @@ public class InventoryState extends BaseSubState{
         }
     }
 
-    public InventoryState(GameStateManager gsm,InventoryManager viewInv,float x, float y) {
+    public InventoryState(GameStateManager gsm,InventoryManager viewInv,float x, float y,boolean canMove,String inventoryPath) {
         super(gsm);
         this.inventoryManager = viewInv;
         this.ROWS = inventoryManager.getRows();
@@ -66,20 +67,21 @@ public class InventoryState extends BaseSubState{
         this.WIDTH = GSManager.getCamera().viewportWidth;
         this.HEIGHT = GSManager.getCamera().viewportHeight;
 
-        ResourceManager.loadTexture("inventory","tilesets/inventory.png");
+        ResourceManager.loadTexture("inventory",inventoryPath);
         ResourceManager.loadTexture("selector","tilesets/selector.png");
 
-        selector = new Vector2(17,82);
-        index = new Vector2(4,0);
+        selector = new Vector2(Integer.MAX_VALUE,Integer.MAX_VALUE);
+        index = new Vector2(0,0);
         itemSet = ResourceManager.getTexture("items");//load the item set in
         frame = new TextureRegion(ResourceManager.getTexture("inventory"));
         selectorImage = new TextureRegion(ResourceManager.getTexture("selector"));
         batch = PlayState.getSpriteBatch();
+        canAccessorMove = canMove;
 
         this.accessor = PlayState.getPlayer();
         this.x = x;
         this.y = y;
-        this.accessor.setCanMove(false);
+        this.accessor.setCanMove(canAccessorMove);
         Log.print("Inventory Screen open!");
         loadItems();
     }
@@ -131,11 +133,15 @@ public class InventoryState extends BaseSubState{
         inventory = inventoryManager.getInventory();//get the actual inventory
         texturedInventory = generateTextured();//generate the textures that the user sees
         updateCursor();
+        //update the position of the inventory screen if it can move
+        if(canAccessorMove) {
+            this.x = (PlayState.getGSM().getCamera().position.x - (Variables.INVENTORY_WIDTH / 2));
+            this.y = PlayState.getGSM().getCamera().position.y - 60;
+        }
 
     }
 
     private void updateCursor(){
-        // tad buggy needs fixing
         float mouseX = getMouse().x;
         float mouseY = getMouse().y;
         for(int i = 0; i < inventory.length;i++){
@@ -148,6 +154,9 @@ public class InventoryState extends BaseSubState{
                     //draw selector at
                     selector = new Vector2(itemX,itemY);
                     index = new Vector2(i,j);
+                } else {
+                    selector.x = texturedInventory[(int)index.x][(int)index.y].getX();
+                    selector.y = texturedInventory[(int)index.x][(int)index.y].getY();
                 }
             }
 
@@ -197,8 +206,11 @@ public class InventoryState extends BaseSubState{
                 Log.print("Touch down at " + getMouse().x + "," + getMouse().y);
                 if (PlayState.getSelectedItem() == null) {
                     //if no item selected then that mean our next click will be to get an item
-                    PlayState.setSelectedItem(getItemOnClick());
-                    inventoryManager.removeFromInventory(PlayState.getSelectedItem());
+                    int id = getItemOnClick().getItemID();
+                    if(id != 0) {
+                        PlayState.setSelectedItem(getItemOnClick());
+                        inventoryManager.removeFromInventory(PlayState.getSelectedItem());
+                    }
                 } else {
                     if (inventory[(int) index.x][(int) index.y] == 0) {
                         // adding to a blank space
@@ -223,7 +235,9 @@ public class InventoryState extends BaseSubState{
             //inventoryManager.addToInventory(selectedItem);
         }
         // set the player back to moving
-        this.accessor.setCanMove(true);
+        if(canAccessorMove==false) {
+            this.accessor.setCanMove(true);
+        }
         // save the changes to the file
         this.inventoryManager.saveInventory();
         Log.print("Inventory Screen closed!");

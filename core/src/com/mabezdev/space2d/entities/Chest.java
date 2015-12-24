@@ -82,11 +82,11 @@ public class Chest extends StaticEntity {
                 //eventually assign a chest a file with its content
                 PlayState.getGSM().addSubState(new InventoryState(PlayState.getGSM(),new InventoryManager(new FileLoader("chestInventory.txt")),
                         (PlayState.getGSM().getCamera().position.x - (Variables.INVENTORY_WIDTH/2)),
-                        (PlayState.getGSM().getCamera().position.y + (Variables.INVENTORY_HEIGHT/5))),inventoryID);
+                        (PlayState.getGSM().getCamera().position.y + (Variables.INVENTORY_HEIGHT/5)),false,"tilesets/inventory.png"),inventoryID);
                 //add player
                 playerInventoryID = UniqueID.getIdentifier();
                 PlayState.getGSM().addSubState(new InventoryState(PlayState.getGSM(),PlayState.getPlayer().getPlayerManager(),(PlayState.getGSM().getCamera().position.x - (Variables.INVENTORY_WIDTH/2)),
-                        (PlayState.getGSM().getCamera().position.y - (Variables.INVENTORY_HEIGHT))),playerInventoryID);
+                        (PlayState.getGSM().getCamera().position.y - (Variables.INVENTORY_HEIGHT)),false,"tilesets/inventory.png"),playerInventoryID);
 
                 PlayState.getGSM().setCurrentSubState(GameStateManager.SubState.CHEST);
             }

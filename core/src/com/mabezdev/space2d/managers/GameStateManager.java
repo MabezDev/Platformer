@@ -86,6 +86,10 @@ public class GameStateManager {
         subStates.remove(id);
     }
 
+    public BaseSubState getSubState(int id){
+        return subStates.get(id);
+    }
+
     public boolean isActive(int idToCheck){
         if(subStates.containsKey(idToCheck)){
             return true;
