@@ -18,6 +18,7 @@ import com.mabezdev.space2d.tiles.items.Item;
 import com.mabezdev.space2d.tiles.items.Shovel;
 import com.mabezdev.space2d.tiles.items.Sword;
 import com.mabezdev.space2d.util.Log;
+import com.mabezdev.space2d.util.MyMouse;
 import com.mabezdev.space2d.world.InventoryManager;
 
 /**
@@ -81,39 +82,6 @@ public class InventoryState extends BaseSubState{
         this.accessor.setCanMove(false);
         Log.print("Inventory Screen open!");
         loadItems();
-        //need to make my own input processor as having one for each stops me from doing what i need
-        Gdx.input.setInputProcessor(new InputAdapter() {
-            @Override
-            public boolean touchDown (int x, int y, int pointer, int button) {
-                Vector3 test = new Vector3(x,y,0);
-                Vector3 unprojected = PlayState.getGSM().getCamera().unproject(test);
-                if(unprojected.x > getX() && unprojected.x < getX() + Variables.INVENTORY_WIDTH && unprojected.y > getY() && unprojected.y < getY() + Variables.INVENTORY_HEIGHT){
-                    //make sure were clicking on the right window
-                    Log.print("Touch down at "+unprojected.x+","+unprojected.y);
-                    if (button == Input.Buttons.LEFT) {
-                        if (PlayState.getSelectedItem() == null) {
-                            //if no item selected then that mean our next click will be to get an item
-                            PlayState.setSelectedItem(getItemOnClick());
-                            inventoryManager.removeFromInventory(PlayState.getSelectedItem());
-                        } else {
-                            if (inventory[(int) index.x][(int) index.y] == 0) {
-                                // adding to a blank space
-                                inventoryManager.addToInventory(PlayState.getSelectedItem(), (int) index.x, (int) index.y);
-                                PlayState.setSelectedItem(null);
-                            } else {
-                                // item swapping done here
-                                Item toSwap = texturedInventory[(int) index.x][(int) index.y];
-                                inventoryManager.addToInventory(PlayState.getSelectedItem(), (int) index.x, (int) index.y);
-                                PlayState.setSelectedItem(toSwap);
-                            }
-                        }
-                }
-
-                    return true;
-                }
-                return false;
-            }
-        });
     }
 
 
@@ -222,7 +190,28 @@ public class InventoryState extends BaseSubState{
 
     @Override
     public void handleInput() {
-
+        if(MyMouse.isPressed(MyMouse.LEFT)) {
+            if (getMouse().x > getX() && getMouse().x < getX() + Variables.INVENTORY_WIDTH && getMouse().y > getY() && getMouse().y < getY() + Variables.INVENTORY_HEIGHT) {
+                //make sure were clicking on the right window
+                Log.print("Touch down at " + getMouse().x + "," + getMouse().y);
+                if (PlayState.getSelectedItem() == null) {
+                    //if no item selected then that mean our next click will be to get an item
+                    PlayState.setSelectedItem(getItemOnClick());
+                    inventoryManager.removeFromInventory(PlayState.getSelectedItem());
+                } else {
+                    if (inventory[(int) index.x][(int) index.y] == 0) {
+                        // adding to a blank space
+                        inventoryManager.addToInventory(PlayState.getSelectedItem(), (int) index.x, (int) index.y);
+                        PlayState.setSelectedItem(null);
+                    } else {
+                        // item swapping done here
+                        Item toSwap = texturedInventory[(int) index.x][(int) index.y];
+                        inventoryManager.addToInventory(PlayState.getSelectedItem(), (int) index.x, (int) index.y);
+                        PlayState.setSelectedItem(toSwap);
+                    }
+                }
+            }
+        }
     }
 
     @Override

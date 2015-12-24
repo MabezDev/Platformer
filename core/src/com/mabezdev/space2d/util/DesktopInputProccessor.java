@@ -25,13 +25,22 @@ public class DesktopInputProccessor implements InputProcessor {
     @Override
     public boolean touchDown (int x, int y, int pointer, int button) {
         if (button == Input.Buttons.LEFT) {
-            return true;
+            MyMouse.setKeyState(MyMouse.LEFT,true);
+        }
+        if (button == Input.Buttons.RIGHT) {
+            MyMouse.setKeyState(MyMouse.RIGHT,true);
         }
         return false;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        if (button == Input.Buttons.LEFT) {
+            MyMouse.setKeyState(MyMouse.LEFT,false);
+        }
+        if (button == Input.Buttons.RIGHT) {
+            MyMouse.setKeyState(MyMouse.RIGHT,false);
+        }
         return false;
     }
 
