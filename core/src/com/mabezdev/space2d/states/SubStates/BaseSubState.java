@@ -14,9 +14,15 @@ public abstract class BaseSubState extends BaseState{
     protected float WIDTH;
     protected float HEIGHT;
 
-
     public BaseSubState(GameStateManager gsm) {
         super(gsm);
+    }
+
+    public float getX(){
+        return x;
+    }
+    public float getY(){
+        return y;
     }
 
 }
