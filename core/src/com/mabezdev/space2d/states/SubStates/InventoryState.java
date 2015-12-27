@@ -150,10 +150,10 @@ public class InventoryState extends BaseSubState{
                 //render a highlight (black hollow box) around that shape also update the index
                 float itemX = texturedInventory[i][j].getX();
                 float itemY = texturedInventory[i][j].getY();
-                if(mouseX > itemX && mouseX < (itemX + 8) && mouseY > itemY && mouseY < (itemY + 8)){
+                if(mouseX > itemX && mouseX < (itemX + 8) && mouseY > itemY && mouseY < (itemY + 8)) {
                     //draw selector at
-                    selector = new Vector2(itemX,itemY);
-                    index = new Vector2(i,j);
+                    selector = new Vector2(itemX, itemY);
+                    index = new Vector2(i, j);
                 } else {
                     selector.x = texturedInventory[(int)index.x][(int)index.y].getX();
                     selector.y = texturedInventory[(int)index.x][(int)index.y].getY();
@@ -223,6 +223,17 @@ public class InventoryState extends BaseSubState{
                         PlayState.setSelectedItem(toSwap);
                     }
                 }
+            }
+        }
+
+        if(MyMouse.isPressed(MyMouse.MWHEEL_DOWN)){
+            if(index.x < texturedInventory[0].length) {
+                index.x += 1;
+            }
+        }
+        if(MyMouse.isPressed(MyMouse.MWHEEL_UP)){
+            if(index.x > 0) {
+                index.x -= 1;
             }
         }
     }

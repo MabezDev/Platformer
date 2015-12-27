@@ -33,8 +33,6 @@ public class Main extends ApplicationAdapter {
 		myGsm.update(dt);
 		myGsm.render();
 		Gdx.graphics.setTitle("SPACE2D FPS: "+Integer.toString(Gdx.graphics.getFramesPerSecond()));
-
-		Log.print(MyMouse.isPressed(MyMouse.MWHEEL_UP)+","+MyMouse.isPressed(MyMouse.MWHEEL_DOWN));
 		//make sure key updates are done last
 		MyMouse.update();
 	}
