@@ -33,7 +33,7 @@ public class InventoryManager {
 
     public void refreshData(){
         valInventory = fileLoader.getData();
-        Log.print("Refreshing data from : "+fileLoader.getFilePath());
+        //Log.print("Refreshing data from : "+fileLoader.getFilePath());
     }
 
     @Deprecated

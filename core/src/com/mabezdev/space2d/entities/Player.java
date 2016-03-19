@@ -105,7 +105,8 @@ public class Player extends Entity {
         }
         if(!PlayState.getGSM().isActive(barID)) {
             barID = UniqueID.getIdentifier();
-            PlayState.getGSM().addSubState(new InventoryState(PlayState.getGSM(),bar,(PlayState.getGSM().getCamera().position.x - (Variables.INVENTORY_WIDTH / 2)),PlayState.getGSM().getCamera().position.y - 60,true,"tilesets/hotbar.png"),barID);
+            //PlayState.getGSM().addSubState(new InventoryState(PlayState.getGSM(),bar,(PlayState.getGSM().getCamera().position.x - (Variables.INVENTORY_WIDTH / 2)),PlayState.getGSM().getCamera().position.y - 60,true,"tilesets/hotbar.png"),barID);
+            PlayState.getGSM().addSubState(new HotBarState(PlayState.getGSM(),bar),barID);
         }
     }
 

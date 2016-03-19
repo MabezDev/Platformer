@@ -8,7 +8,10 @@ import com.mabezdev.space2d.entities.Player;
 import com.mabezdev.space2d.managers.GameStateManager;
 import com.mabezdev.space2d.managers.ResourceManager;
 import com.mabezdev.space2d.states.PlayState;
+import com.mabezdev.space2d.tiles.items.Empty;
 import com.mabezdev.space2d.tiles.items.Item;
+import com.mabezdev.space2d.tiles.items.Shovel;
+import com.mabezdev.space2d.tiles.items.Sword;
 import com.mabezdev.space2d.util.FileLoader;
 import com.mabezdev.space2d.util.Log;
 import com.mabezdev.space2d.world.InventoryManager;
@@ -16,24 +19,7 @@ import com.mabezdev.space2d.world.InventoryManager;
 /**
  * Created by Mabez on 24/12/2015.
  */
-public class HotBarState extends BaseSubState {
-
-    private static final int gap = 1;
-    private int[][] inventory;
-    private TextureRegion[] loadedTextures;
-    private Item[][] texturedInventory;
-    private InventoryManager inventoryManager;
-    private int ROWS;
-    private int COLUMNS;
-    private Texture itemSet;
-    private TextureRegion frame;
-    private TextureRegion selectorImage;
-    private Player accessor;
-    private float updateTime = 0;
-    private float updateTimer = 1f;
-    private Vector2 selector;
-    private Vector2 index;
-
+public class HotBarState extends InventoryState {
 
     public HotBarState(GameStateManager gsm, InventoryManager mng) {
         super(gsm);
@@ -59,14 +45,46 @@ public class HotBarState extends BaseSubState {
         this.accessor = PlayState.getPlayer();
     }
 
+    public void notifyDataSetHasChanged(){
+        dataSetHasChanged = true;
+    }
+
     @Override
     public void update(float dt) {
-
+        if(dataSetHasChanged){
+            Log.print("Generating");
+            //refresh inventory
+            inventoryManager.refreshData();
+            //gen textures
+            texturedInventory = generateTextured(inventoryManager.getInventory());
+            Log.print(texturedInventory.length);
+            //save inventory
+            inventoryManager.saveInventory();
+            //set set up for next notification
+            dataSetHasChanged = false;
+        }
+        this.x = (PlayState.getGSM().getCamera().position.x - (Variables.INVENTORY_WIDTH / 2));
+        this.y = (PlayState.getGSM().getCamera().position.y - (PlayState.getGSM().getCamera().viewportHeight/2 - 2));
+        for(int i=0; i<ROWS;i++){
+            for(int j=0; j < COLUMNS; j++){
+                texturedInventory[i][j].setX((this.x  + gap) + (j* (Variables.ITEMTILEWIDTH + gap)));
+                texturedInventory[i][j].setY((this.y + gap) + (i*(Variables.ITEMTILEHEIGHT + gap)));
+            }
+        }
     }
 
     @Override
     public void render() {
-
+        batch.begin();
+        {
+            batch.draw(frame,x,y);
+            for(int i=0; i<ROWS;i++){
+                for(int j=0; j < COLUMNS; j++){
+                    texturedInventory[i][j].render(batch);
+                }
+            }
+        }
+        batch.end();
     }
 
     @Override

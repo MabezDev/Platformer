@@ -1,6 +1,7 @@
 package com.mabezdev.space2d.states.SubStates;
 
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
@@ -29,23 +30,23 @@ public class InventoryState extends BaseSubState{
     //this UI interacts with the player then sends the actions to the InventoryManager to actually update the content
 
     // temp need to set up a data structure to get my inventory, (inventory loader class needs to created(takes text input))
-    private static final int gap = 1;
-    private int[][] inventory;
-    private TextureRegion[] loadedTextures;
-    private Item[][] texturedInventory;
-    private InventoryManager inventoryManager;
-    private int ROWS;
-    private int COLUMNS;
-    private Texture itemSet;
-    private TextureRegion frame;
-    private TextureRegion selectorImage;
-    private Player accessor;
-    private float updateTime = 0;
-    private float updateTimer = 1f;
-    private Vector2 selector;
-    private Vector2 index;
-    private boolean canAccessorMove;
+    protected static final int gap = 1;
+    protected TextureRegion[] loadedTextures;
+    protected Item[][] texturedInventory;
+    protected InventoryManager inventoryManager;
+    protected int ROWS;
+    protected int COLUMNS;
+    protected Texture itemSet;
+    protected TextureRegion frame;
+    protected TextureRegion selectorImage;
+    protected Player accessor;
+    protected float updateTime = 0;
+    protected float updateTimer = 1f;
+    protected Vector2 selector;
+    protected Vector2 index;
+    protected boolean canAccessorMove;
     //private Item selectedItem;
+    protected boolean dataSetHasChanged = true;
 
     public enum Items {
         EMPTY(0),
@@ -86,8 +87,14 @@ public class InventoryState extends BaseSubState{
         loadItems();
     }
 
+    public InventoryState(GameStateManager gsm){
+        super(gsm);
+        itemSet = ResourceManager.getTexture("items");//load the item set in
+        this.loadItems();
+    }
 
-    private Item[][] generateTextured(){
+
+    protected Item[][] generateTextured(int[][] inventory){ // should only be called once at the start
         //generate the textures from the IDS in inventory
         Item[][] temp = new Item[ROWS][COLUMNS];
         for(int i = 0;i < ROWS; i++){
@@ -108,7 +115,7 @@ public class InventoryState extends BaseSubState{
         return temp;
     }
 
-    private void loadItems(){
+    protected void loadItems(){
         int numOfItems = Items.values().length;
         TextureRegion[] temp = new TextureRegion[numOfItems];
         for(int i=0;i<temp.length;i++){
@@ -117,21 +124,24 @@ public class InventoryState extends BaseSubState{
         loadedTextures = temp;
     }
 
+    public void notifyDataSetChange(){
+        dataSetHasChanged = true;
+    }
 
 
     @Override
     public void update(float dt) {
-        if(updateTime > updateTimer){
-            //save what this user has done
+
+        if(dataSetHasChanged) {//only generate when we have to.
+            Log.print("Changes occurred, generating new Textures");
             inventoryManager.saveInventory();
-            //load in any updates if any(from other users)
+            //todo : replace this with functions to add and remove single Item objects fromt he texturedinventory array
+            //todo : generate should only be called on the initalization of this inventory state to populate the array
+            texturedInventory = generateTextured(inventoryManager.getInventory());//generate the textures that the user sees
             inventoryManager.refreshData();
-            updateTime = 0;
-        } else {
-            updateTime += dt;
+            dataSetHasChanged = false;
         }
-        inventory = inventoryManager.getInventory();//get the actual inventory
-        texturedInventory = generateTextured();//generate the textures that the user sees
+        //make sure we only generate a new
         updateCursor();
         //update the position of the inventory screen if it can move
         if(canAccessorMove) {
@@ -144,8 +154,8 @@ public class InventoryState extends BaseSubState{
     private void updateCursor(){
         float mouseX = getMouse().x;
         float mouseY = getMouse().y;
-        for(int i = 0; i < inventory.length;i++){
-            for(int j =0;j < inventory[0].length;j++){
+        for(int i = 0; i < texturedInventory.length;i++){
+            for(int j =0;j < texturedInventory[0].length;j++){
                 //if current mouse x & y are in a item slot
                 //render a highlight (black hollow box) around that shape also update the index
                 float itemX = texturedInventory[i][j].getX();
@@ -155,6 +165,7 @@ public class InventoryState extends BaseSubState{
                     selector = new Vector2(itemX, itemY);
                     index = new Vector2(i, j);
                 } else {
+                    //todo check these aren't out of bounds
                     selector.x = texturedInventory[(int)index.x][(int)index.y].getX();
                     selector.y = texturedInventory[(int)index.x][(int)index.y].getY();
                 }
@@ -194,17 +205,19 @@ public class InventoryState extends BaseSubState{
 
     private Item getItemOnClick(){
         Log.print("Grabbing: " + texturedInventory[(int) index.x][(int) index.y].getItemID());
+        //we have changed the contents of the current UI
         return texturedInventory[(int) index.x][(int) index.y];
     }
 
     @Override
     public void handleInput() {
         if(MyMouse.isPressed(MyMouse.LEFT)) {
-            Log.print(getMouse().x+","+getMouse().y);
+            //Log.print(getMouse().x+","+getMouse().y);
             if (getMouse().x > getX() && getMouse().x < (getX() + Variables.INVENTORY_WIDTH) && getMouse().y > getY() && getMouse().y < (getY() + Variables.INVENTORY_HEIGHT)) {
                 //make sure were clicking on the right window
-                Log.print("Touch down at " + getMouse().x + "," + getMouse().y);
+                notifyDataSetChange();
                 if (PlayState.getSelectedItem() == null) {
+
                     //if no item selected then that mean our next click will be to get an item
                     int id = getItemOnClick().getItemID();
                     if(id != 0) {
@@ -212,7 +225,8 @@ public class InventoryState extends BaseSubState{
                         inventoryManager.removeFromInventory(PlayState.getSelectedItem());
                     }
                 } else {
-                    if (inventory[(int) index.x][(int) index.y] == 0) {
+
+                    if (inventoryManager.getInventory()[(int) index.x][(int) index.y] == 0) {
                         // adding to a blank space
                         inventoryManager.addToInventory(PlayState.getSelectedItem(), (int) index.x, (int) index.y);
                         PlayState.setSelectedItem(null);
