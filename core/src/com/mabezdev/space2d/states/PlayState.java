@@ -77,7 +77,7 @@ public class PlayState extends BaseState {
         Chest myChest2 = new Chest(1*Variables.TILEWIDTH,1*Variables.TILEHEIGHT, Chest.chestState.CLOSED);
         entities.add(myChest2);
         players.add(player);
-        players.add(player2);
+        //players.add(player2);
     }
 
 
@@ -114,6 +114,11 @@ public class PlayState extends BaseState {
 
     @Override
     public void update(float dt) {
+        /*
+        This whole algorithm needs to be redone to support multiple enemies and the player working
+        Enemeis should just be giving data to the playstate not taking in any input from our client
+        Eventually they will be streamed data coming from other clients
+         */
         for (int j = 0; j < players.size(); j++){
             //update all entities
             Tile currentTile = world[getRowOfEntity(players.get(j))][getColumnOfEntity(players.get(j))];
@@ -128,6 +133,7 @@ public class PlayState extends BaseState {
                     //player is on top of object, then get if the player is pressing the action button
                     if (player.getAction()) {
                         //player wants do action so StaticEntity.doAction()
+                        Log.print("Called");
                         t.doAction();
                     }
                 }

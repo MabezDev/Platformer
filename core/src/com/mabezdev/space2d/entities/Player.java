@@ -194,7 +194,7 @@ public class Player extends Players {
 
     private void attack(){
         isAttacking = true;
-        //do code for hitting objects here
+        //code for attacking shoudl be calculated by PlayState
     }
 
 

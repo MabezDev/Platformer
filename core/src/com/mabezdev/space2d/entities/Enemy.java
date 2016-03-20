@@ -29,6 +29,5 @@ public class Enemy extends Players {
 
     @Override
     public void update(float dt) {
-
     }
 }
