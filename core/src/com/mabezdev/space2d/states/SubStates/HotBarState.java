@@ -8,6 +8,7 @@ import com.mabezdev.space2d.managers.GameStateManager;
 import com.mabezdev.space2d.managers.ResourceManager;
 import com.mabezdev.space2d.states.PlayState;
 import com.mabezdev.space2d.tiles.items.Item;
+import com.mabezdev.space2d.tiles.items.Weapon;
 import com.mabezdev.space2d.util.Log;
 import com.mabezdev.space2d.util.MyMouse;
 import com.mabezdev.space2d.world.InventoryManager;
@@ -46,13 +47,12 @@ public class HotBarState extends InventoryState {
     @Override
     public void update(float dt) {
         if(dataSetHasChanged){
-            Log.print("Generating");
             //save inventory
             inventoryManager.saveInventory();
             //gen textures
             texturedInventory = generateTextured(inventoryManager.getInventory());
             Log.print(texturedInventory.length);
-            //refresh inventory
+            //refresh inventory from the file
             inventoryManager.refreshData();
             //set set up for next notification
             dataSetHasChanged = false;
@@ -83,9 +83,9 @@ public class HotBarState extends InventoryState {
         }
     }
 
-    public Item getSelectedHotBarItem(){
+    public Weapon getSelectedHotBarItem(){
         try {
-            return texturedInventory[(int) index.x][(int) index.y];
+            return (Weapon) texturedInventory[(int) index.x][(int) index.y];
         } catch(Exception e) {
             return null;
         }

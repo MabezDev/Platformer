@@ -14,6 +14,7 @@ import com.mabezdev.space2d.states.SubStates.InventoryState;
 import com.mabezdev.space2d.states.SubStates.Paused;
 import com.mabezdev.space2d.tiles.items.Item;
 import com.mabezdev.space2d.util.FileLoader;
+import com.mabezdev.space2d.util.MyMouse;
 import com.mabezdev.space2d.util.UniqueID;
 import com.mabezdev.space2d.world.InventoryManager;
 
@@ -36,6 +37,11 @@ public class Player extends Entity {
     private int barID;
     private static Item selectedItem;
     private HotBarState hotBarState;
+    private boolean canAttack;
+    private boolean isAttacking;
+
+    private float attackTimer = 0f;
+    private float attackDuration = .3f;
 
 
     public Player(float x, float y){
@@ -50,6 +56,8 @@ public class Player extends Entity {
         setAction(false);
         setInventory(false);
         canMove = true;
+        canAttack = false;
+        isAttacking = false;
         //eventually will be TextureRegion[] filled with animation states -> Animation manager that holdes the regions we just tell the manager
         //what stae were in and it will give up the regions to draw
         playerImage = new TextureRegion(ResourceManager.getTexture("player"),0,0,32,32);
@@ -62,12 +70,21 @@ public class Player extends Entity {
         pausedID = 200000;
     }
 
+    public boolean isAttacking(){
+        return isAttacking;
+    }
+
     @Override
     public void render(SpriteBatch sb) {
         sb.draw(playerImage,x,y);
         if(hotBarState.getSelectedHotBarItem()!=null) {
-            sb.draw(hotBarState.getSelectedHotBarItem().getTileImage(), x, y,Variables.GAME_ITEM_SIZE,Variables.GAME_ITEM_SIZE);
+            if(isAttacking){
+                sb.draw(hotBarState.getSelectedHotBarItem().getTileImage(), x + 24, y, Variables.GAME_ITEM_SIZE, Variables.GAME_ITEM_SIZE,16,16,1,1,-45);
+            } else {
+                sb.draw(hotBarState.getSelectedHotBarItem().getTileImage(), x + 16, y + 16, Variables.GAME_ITEM_SIZE, Variables.GAME_ITEM_SIZE);
+            }
         }
+
     }
 
     @Override
@@ -80,6 +97,23 @@ public class Player extends Entity {
         this.handleMapBoundaries(dt);
         //decelerate player with drag
         this.handleRetardation();
+
+        if(isAttacking){
+            if(attackTimer > attackDuration){
+                attackTimer = 0;
+                isAttacking = false;
+            } else {
+                attackTimer += dt;
+            }
+        }
+
+        if(hotBarState.getSelectedHotBarItem()!=null){
+            canAttack = true;
+            attackDuration = hotBarState.getSelectedHotBarItem().getAttackTime();
+        } else {
+            canAttack = false;
+            attackDuration = 1.0f;
+        }
 
         if(isPaused) {
             if (PlayState.getGSM().getCurrentSubState() == GameStateManager.SubState.NONE) {
@@ -132,8 +166,8 @@ public class Player extends Entity {
         return selectedItem;
     }
 
-    public static void setSelectedItem(Item myselectedItem) {
-        selectedItem = myselectedItem;
+    public static void setSelectedItem(Item mySelectedItem) {
+        selectedItem = mySelectedItem;
     }
 
     private void handleRetardation(){
@@ -154,9 +188,19 @@ public class Player extends Entity {
         }
     }
 
+    private void attack(){
+        isAttacking = true;
+        //do code for hitting objects here
+    }
+
 
 
     private void handleInput(){
+        if(canAttack){
+            if(MyMouse.isPressed(MyMouse.LEFT)){
+                attack();
+            }
+        }
         if(canMove) {
             if (Gdx.input.isKeyPressed(Input.Keys.D)) {
                 this.move(Direction.RIGHT);

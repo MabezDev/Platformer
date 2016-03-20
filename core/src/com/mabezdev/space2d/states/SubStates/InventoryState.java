@@ -51,14 +51,18 @@ public class InventoryState extends BaseSubState{
     protected boolean dataSetHasChanged = true;
 
     public enum Items {
-        EMPTY(0),
-        SHOVEL(1),
-        SWORD(2);
+        EMPTY(0,0,0),
+        SHOVEL(1,1f,2),
+        SWORD(2,.2f,5);
 
         private int itemID;
+        private float attackTime;
+        private int damage;
 
-        Items(int itemID){
+        Items(int itemID, float attackTime, int damage){
             this.itemID = itemID;
+            this.attackTime = attackTime;
+            this.damage = damage;
         }
     }
 
@@ -104,13 +108,15 @@ public class InventoryState extends BaseSubState{
         for(int i = 0;i < ROWS; i++){
             for(int j = 0;j < COLUMNS;j++){
                 if(inventory[i][j] == Items.SHOVEL.itemID){
-                    temp[i][j] = new Shovel((this.x  + gap) + (j* (Variables.ITEMTILEWIDTH + gap)), (this.y + gap) + (i*(Variables.ITEMTILEHEIGHT + gap)) ,Items.SHOVEL.itemID,loadedTextures[Items.SHOVEL.itemID]);
+                    temp[i][j] = new Shovel((this.x  + gap) + (j* (Variables.ITEMTILEWIDTH + gap)), (this.y + gap) + (i*(Variables.ITEMTILEHEIGHT + gap)) ,Items.SHOVEL.itemID,loadedTextures[Items.SHOVEL.itemID],
+                            Items.SHOVEL.attackTime, Items.SHOVEL.damage);
                 }
                 if(inventory[i][j] == Items.EMPTY.itemID){
                     temp[i][j] = new Empty((this.x  + gap) + (j* (Variables.ITEMTILEWIDTH + gap)), (this.y + gap) + (i*(Variables.ITEMTILEHEIGHT + gap)) ,Items.EMPTY.itemID,loadedTextures[Items.EMPTY.itemID]);
                 }
                 if(inventory[i][j] == Items.SWORD.itemID){
-                    temp[i][j] = new Sword((this.x  + gap) + (j* (Variables.ITEMTILEWIDTH + gap) ), (this.y + gap) + (i*(Variables.ITEMTILEHEIGHT + gap)) ,Items.SWORD.itemID,loadedTextures[Items.SWORD.itemID]);
+                    temp[i][j] = new Sword((this.x  + gap) + (j* (Variables.ITEMTILEWIDTH + gap) ), (this.y + gap) + (i*(Variables.ITEMTILEHEIGHT + gap)) ,Items.SWORD.itemID,loadedTextures[Items.SWORD.itemID],
+                            Items.SWORD.attackTime,Items.SWORD.damage);
                 }
                 temp[i][j].setRow(i);
                 temp[i][j].setColumn(j);
@@ -220,7 +226,6 @@ public class InventoryState extends BaseSubState{
 
     protected void handleMouse(){
         if(MyMouse.isPressed(MyMouse.LEFT)) {
-            Log.print(MyMouse.getMouse().x + "," + MyMouse.getMouse().y);
             //don't remove items if we cannot put them somewhere
             if(PlayState.getGSM().numberOfSubStates() > 1 && !PlayState.getPlayer().getIsPaused()){
                 if (MyMouse.getMouse().x > getX() && MyMouse.getMouse().x < (getX() + FRAME_WIDTH) && MyMouse.getMouse().y > getY() && MyMouse.getMouse().y < (getY() + FRAME_HEIGHT)) {

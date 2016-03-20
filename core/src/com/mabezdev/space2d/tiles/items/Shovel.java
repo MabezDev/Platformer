@@ -7,10 +7,10 @@ import com.mabezdev.space2d.Variables;
 /**
  * Created by Mabez on 19/12/2015.
  */
-public class Shovel extends Item {
+public class Shovel extends Weapon {
 
-    public Shovel(float x, float y, int itemID, TextureRegion image) {
-        super(x, y, itemID,image);
+    public Shovel(float x, float y, int itemID, TextureRegion image, float attackTime, int damage) {
+        super(x, y, itemID,image, attackTime ,damage);
     }
 
     @Override

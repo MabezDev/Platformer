@@ -19,7 +19,7 @@ public class Empty extends Item {
     }
 
     public Empty(float x, float y, int itemID, TextureRegion image) {
-        super(x, y, itemID, image);
+        super(x, y, itemID,image);
     }
 
 }
