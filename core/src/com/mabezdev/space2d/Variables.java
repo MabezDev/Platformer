@@ -21,4 +21,5 @@ public class Variables {
     public static float GAME_CAMERA_VIEWPORT_HEIGHT;
     public static float INVENTORY_WIDTH = 128;
     public static float INVENTORY_HEIGHT = 47;
+    public static int GAME_ITEM_SIZE = 16;
 }

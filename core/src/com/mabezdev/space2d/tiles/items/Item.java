@@ -17,6 +17,11 @@ public  abstract class Item extends Tile {
     protected int ROW;
     protected int COLUMN;
 
+    protected int damage;
+    protected int totalDurability;
+    protected int currentDurability;
+    protected boolean isBroken = false;
+
     public Item(float x, float y, int itemID , TextureRegion tileImage){
         this.x = x;
         this.y = y;
@@ -42,6 +47,25 @@ public  abstract class Item extends Tile {
 
     public int getRow(){
         return ROW;
+    }
+
+    public int getDamage(){
+        return damage;
+    }
+
+    public int getTotalDurability(){
+        return totalDurability;
+    }
+
+    public int getCurrentDurability(){
+        return currentDurability;
+    }
+
+    public void reduceDurability(int amount){
+        currentDurability -= amount;
+        if(currentDurability < 0){
+            isBroken = true;
+        }
     }
 
     public  TextureRegion getTileImage(){

@@ -35,6 +35,7 @@ public class Player extends Entity {
     private InventoryManager bar;
     private int barID;
     private static Item selectedItem;
+    private HotBarState hotBarState;
 
 
     public Player(float x, float y){
@@ -49,10 +50,12 @@ public class Player extends Entity {
         setAction(false);
         setInventory(false);
         canMove = true;
-        //eventually will be TextureRegion[] filled with animation states
+        //eventually will be TextureRegion[] filled with animation states -> Animation manager that holdes the regions we just tell the manager
+        //what stae were in and it will give up the regions to draw
         playerImage = new TextureRegion(ResourceManager.getTexture("player"),0,0,32,32);
         playerManager = new InventoryManager(new FileLoader(inventoryFile));
         bar = new InventoryManager(new FileLoader(barFile));
+        hotBarState = new HotBarState(PlayState.getGSM(),bar);
 
         barID = 20000;
         inventoryID = 20000;
@@ -62,6 +65,9 @@ public class Player extends Entity {
     @Override
     public void render(SpriteBatch sb) {
         sb.draw(playerImage,x,y);
+        if(hotBarState.getSelectedHotBarItem()!=null) {
+            sb.draw(hotBarState.getSelectedHotBarItem().getTileImage(), x, y,Variables.GAME_ITEM_SIZE,Variables.GAME_ITEM_SIZE);
+        }
     }
 
     @Override
@@ -107,8 +113,9 @@ public class Player extends Entity {
         }
         if(!PlayState.getGSM().isActive(barID)) {
             barID = UniqueID.getIdentifier();
-            //PlayState.getGSM().addSubState(new InventoryState(PlayState.getGSM(),bar,(PlayState.getGSM().getCamera().position.x - (Variables.INVENTORY_WIDTH / 2)),PlayState.getGSM().getCamera().position.y - 60,true,"tilesets/hotbar.png"),barID);
-            PlayState.getGSM().addSubState(new HotBarState(PlayState.getGSM(),bar),barID);
+            //PlayState.getGSM().addSubState(new InventoryState(PlayState.getGSM(),bar,(PlayState.getGSM().getCamera().position.x - (Variables.INVENTORY_WIDTH / 2)),
+            // PlayState.getGSM().getCamera().position.y - 60,true,"tilesets/hotbar.png"),barID);
+            PlayState.getGSM().addSubState(hotBarState,barID);
         }
     }
 

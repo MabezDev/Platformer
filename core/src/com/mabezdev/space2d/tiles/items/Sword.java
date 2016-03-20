@@ -14,7 +14,7 @@ public class Sword extends Item {
 
     @Override
     public void doAction() {
-
+        // not sure this will be useful but keep it here for now
     }
 
     @Override

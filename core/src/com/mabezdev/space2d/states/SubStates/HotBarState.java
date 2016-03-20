@@ -1,18 +1,13 @@
 package com.mabezdev.space2d.states.SubStates;
 
-import com.badlogic.gdx.graphics.Texture;
+
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.mabezdev.space2d.Variables;
-import com.mabezdev.space2d.entities.Player;
 import com.mabezdev.space2d.managers.GameStateManager;
 import com.mabezdev.space2d.managers.ResourceManager;
 import com.mabezdev.space2d.states.PlayState;
-import com.mabezdev.space2d.tiles.items.Empty;
 import com.mabezdev.space2d.tiles.items.Item;
-import com.mabezdev.space2d.tiles.items.Shovel;
-import com.mabezdev.space2d.tiles.items.Sword;
-import com.mabezdev.space2d.util.FileLoader;
 import com.mabezdev.space2d.util.Log;
 import com.mabezdev.space2d.util.MyMouse;
 import com.mabezdev.space2d.world.InventoryManager;
@@ -89,7 +84,11 @@ public class HotBarState extends InventoryState {
     }
 
     public Item getSelectedHotBarItem(){
-        return texturedInventory[(int)index.x][(int)index.y];
+        try {
+            return texturedInventory[(int) index.x][(int) index.y];
+        } catch(Exception e) {
+            return null;
+        }
     }
 
 
