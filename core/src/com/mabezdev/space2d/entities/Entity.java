@@ -26,6 +26,9 @@ public abstract class Entity {
     private float tempX;
     private float tempY;
 
+    protected int currentHealth;
+    protected int maxHealth;
+    protected boolean isDead = false;
 
     protected float dx;
     protected float dy;
@@ -35,6 +38,17 @@ public abstract class Entity {
         LEFT,
         RIGHT,
         DOWN
+    }
+
+    protected void removeHealth(int amount){
+        currentHealth -= amount;
+        if(currentHealth <= 0){
+            isDead = true;
+        }
+    }
+
+    protected boolean isDead(){
+        return isDead;
     }
 
     public float getDx(){

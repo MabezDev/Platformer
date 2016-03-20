@@ -4,10 +4,7 @@ package com.mabezdev.space2d.states;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mabezdev.space2d.Variables;
-import com.mabezdev.space2d.entities.Chest;
-import com.mabezdev.space2d.entities.Entity;
-import com.mabezdev.space2d.entities.Player;
-import com.mabezdev.space2d.entities.StaticEntity;
+import com.mabezdev.space2d.entities.*;
 import com.mabezdev.space2d.managers.GameStateManager;
 import com.mabezdev.space2d.managers.ResourceManager;
 import com.mabezdev.space2d.tiles.Tile;
@@ -39,6 +36,7 @@ public class PlayState extends BaseState {
     private static float WORLD_HEIGHT;
     private static Tile[][] world;
     private static ArrayList<Entity> entities;
+    private static ArrayList<Entity> players;
     private static Player player;
     private static final float cameraLerp = 0.1f;
     private boolean isPaused;
@@ -56,7 +54,9 @@ public class PlayState extends BaseState {
         sb = new SpriteBatch();
         camera = GSManager.getCamera();
         entities = new ArrayList<Entity>();
-        player = new Player(0,0);
+        players = new ArrayList<Entity>();
+        player = new Player(0,0,20);
+        Enemy player2 = new Enemy(20,20,20);
         //set to ortho to scale down the player view
         camera.setToOrtho(false, Variables.WIDTH*unitScale, Variables.HEIGHT*unitScale);
         //Get the map into memory!
@@ -76,7 +76,8 @@ public class PlayState extends BaseState {
 
         Chest myChest2 = new Chest(1*Variables.TILEWIDTH,1*Variables.TILEHEIGHT, Chest.chestState.CLOSED);
         entities.add(myChest2);
-        entities.add(player);
+        players.add(player);
+        players.add(player2);
     }
 
 
@@ -113,19 +114,17 @@ public class PlayState extends BaseState {
 
     @Override
     public void update(float dt) {
-        for (int j = 0; j < entities.size(); j++) {
+        for (int j = 0; j < players.size(); j++){
             //update all entities
-            Entity e = entities.get(j);
-            e.update(dt);
-            Tile currentTile = world[getRowOfEntity(player)][getColumnOfEntity(player)];
-            player.setCurrentTile(currentTile);
-
-            //make sure we are not checking player against itself
-            if (!e.equals(player)) {
+            Tile currentTile = world[getRowOfEntity(players.get(j))][getColumnOfEntity(players.get(j))];
+            players.get(j).setCurrentTile(currentTile);
+            players.get(j).update(dt);
+            for(Entity e : entities) {
                 //cast the entity to a StaticEntity
                 StaticEntity t = (StaticEntity) e;
+                t.update(dt);
                 // if player is in the same tile as the StaticEntity
-                if (getColumnOfEntity(player) == getColumnOfEntity(t) && getRowOfEntity(player) == getRowOfEntity(t)) {
+                if (getColumnOfEntity(players.get(j)) == getColumnOfEntity(t) && getRowOfEntity(players.get(j)) == getRowOfEntity(t)) {
                     //player is on top of object, then get if the player is pressing the action button
                     if (player.getAction()) {
                         //player wants do action so StaticEntity.doAction()
@@ -134,6 +133,7 @@ public class PlayState extends BaseState {
                 }
             }
         }
+
         updateCamera();
     }
 
@@ -184,6 +184,10 @@ public class PlayState extends BaseState {
             //todo add comparator to make sure player is always draw last(over everything)
             for(int j=0; j < entities.size();j++) {
                 entities.get(j).render(sb);
+            }
+
+            for(int k=0; k < players.size(); k++){
+                players.get(k).render(sb);
             }
 
         }

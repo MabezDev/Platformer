@@ -8,7 +8,7 @@ import com.mabezdev.space2d.tiles.Tile;
 /**
  * Created by Mabez on 18/12/2015.
  */
-public  abstract class Item extends Tile {
+public abstract class Item extends Tile {
 
     private int itemID;
     protected TextureRegion tileImage;
@@ -59,6 +59,6 @@ public  abstract class Item extends Tile {
 
     public abstract void doAction();//used to give each item a specific function, i.e A Weapon can attack
 
-
+    public abstract String getItemType();
 
 }

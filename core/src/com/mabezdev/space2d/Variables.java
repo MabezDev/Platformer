@@ -22,4 +22,6 @@ public class Variables {
     public static float INVENTORY_WIDTH = 128;
     public static float INVENTORY_HEIGHT = 47;
     public static int GAME_ITEM_SIZE = 16;
+    public static String ITEM_WEAPON = "WEAPON";
+    public static String ITEM = "ITEM";
 }

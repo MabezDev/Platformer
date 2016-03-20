@@ -2,6 +2,7 @@ package com.mabezdev.space2d.tiles.items;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.mabezdev.space2d.Variables;
 
 /**
  * Created by Mabez on 20/03/2016.
@@ -56,5 +57,10 @@ public class Weapon extends Item {
     @Override
     public void doAction() {
 
+    }
+
+    @Override
+    public String getItemType(){
+        return Variables.ITEM_WEAPON;
     }
 }

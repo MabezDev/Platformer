@@ -44,7 +44,7 @@ public class Player extends Entity {
     private float attackDuration = .3f;
 
 
-    public Player(float x, float y){
+    public Player(float x, float y,int health){
         setX(x);
         setY(y);
         NAME = "PLAYER";
@@ -58,6 +58,9 @@ public class Player extends Entity {
         canMove = true;
         canAttack = false;
         isAttacking = false;
+        maxHealth = health;
+        currentHealth = health;
+
         //eventually will be TextureRegion[] filled with animation states -> Animation manager that holdes the regions we just tell the manager
         //what stae were in and it will give up the regions to draw
         playerImage = new TextureRegion(ResourceManager.getTexture("player"),0,0,32,32);
@@ -79,6 +82,7 @@ public class Player extends Entity {
         sb.draw(playerImage,x,y);
         if(hotBarState.getSelectedHotBarItem()!=null) {
             if(isAttacking){
+                //make shift animation just rotates the weapon
                 sb.draw(hotBarState.getSelectedHotBarItem().getTileImage(), x + 24, y, Variables.GAME_ITEM_SIZE, Variables.GAME_ITEM_SIZE,16,16,1,1,-45);
             } else {
                 sb.draw(hotBarState.getSelectedHotBarItem().getTileImage(), x + 16, y + 16, Variables.GAME_ITEM_SIZE, Variables.GAME_ITEM_SIZE);
