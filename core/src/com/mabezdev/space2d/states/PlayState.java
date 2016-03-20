@@ -42,7 +42,7 @@ public class PlayState extends BaseState {
     private static Player player;
     private static final float cameraLerp = 0.1f;
     private boolean isPaused;
-    private static Item selectedItem;
+
 
 
     public PlayState(GameStateManager gsm) {
@@ -79,13 +79,7 @@ public class PlayState extends BaseState {
         entities.add(player);
     }
 
-    public static Item getSelectedItem() {
-        return selectedItem;
-    }
 
-    public static void setSelectedItem(Item myselectedItem) {
-        selectedItem = myselectedItem;
-    }
 
 
     public static SpriteBatch getSpriteBatch() {

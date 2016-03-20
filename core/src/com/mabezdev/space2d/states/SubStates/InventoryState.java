@@ -36,6 +36,8 @@ public class InventoryState extends BaseSubState{
     protected InventoryManager inventoryManager;
     protected int ROWS;
     protected int COLUMNS;
+    protected float FRAME_WIDTH;
+    protected float FRAME_HEIGHT;
     protected Texture itemSet;
     protected TextureRegion frame;
     protected TextureRegion selectorImage;
@@ -67,7 +69,8 @@ public class InventoryState extends BaseSubState{
         this.COLUMNS = inventoryManager.getColumns();
         this.WIDTH = GSManager.getCamera().viewportWidth;
         this.HEIGHT = GSManager.getCamera().viewportHeight;
-
+        this.FRAME_WIDTH = Variables.INVENTORY_WIDTH;
+        this.FRAME_HEIGHT = Variables.INVENTORY_HEIGHT;
         ResourceManager.loadTexture("inventory",inventoryPath);
         ResourceManager.loadTexture("selector","tilesets/selector.png");
 
@@ -90,6 +93,7 @@ public class InventoryState extends BaseSubState{
     public InventoryState(GameStateManager gsm){
         super(gsm);
         itemSet = ResourceManager.getTexture("items");//load the item set in
+        index = new Vector2(0,0);
         this.loadItems();
     }
 
@@ -133,7 +137,6 @@ public class InventoryState extends BaseSubState{
     public void update(float dt) {
 
         if(dataSetHasChanged) {//only generate when we have to.
-            Log.print("Changes occurred, generating new Textures");
             inventoryManager.saveInventory();
             //todo : replace this with functions to add and remove single Item objects fromt he texturedinventory array
             //todo : generate should only be called on the initalization of this inventory state to populate the array
@@ -151,9 +154,9 @@ public class InventoryState extends BaseSubState{
 
     }
 
-    private void updateCursor(){
-        float mouseX = getMouse().x;
-        float mouseY = getMouse().y;
+    protected void updateCursor(){
+        float mouseX = MyMouse.getMouse().x;
+        float mouseY = MyMouse.getMouse().y;
         for(int i = 0; i < texturedInventory.length;i++){
             for(int j =0;j < texturedInventory[0].length;j++){
                 //if current mouse x & y are in a item slot
@@ -161,21 +164,18 @@ public class InventoryState extends BaseSubState{
                 float itemX = texturedInventory[i][j].getX();
                 float itemY = texturedInventory[i][j].getY();
                 if(mouseX > itemX && mouseX < (itemX + 8) && mouseY > itemY && mouseY < (itemY + 8)) {
+                    //Log.print(i+","+j);
                     //draw selector at
                     selector = new Vector2(itemX, itemY);
                     index = new Vector2(i, j);
                 } else {
-                    //todo check these aren't out of bounds
+                    //keep the selector on the current item
                     selector.x = texturedInventory[(int)index.x][(int)index.y].getX();
                     selector.y = texturedInventory[(int)index.x][(int)index.y].getY();
                 }
             }
 
         }
-    }
-
-    private Vector3 getMouse(){
-        return PlayState.getGSM().getCamera().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
     }
 
     @Override
@@ -188,14 +188,7 @@ public class InventoryState extends BaseSubState{
                     texturedInventory[i][j].render(batch); // draw the textured inv
                 }
             }
-            if(PlayState.getSelectedItem()==null) {
-                batch.draw(selectorImage, selector.x, selector.y);
-            } else {
-                //selected item shall follow the mouse
-                PlayState.getSelectedItem().setX(getMouse().x);
-                PlayState.getSelectedItem().setY(getMouse().y);
-                PlayState.getSelectedItem().render(batch);
-            }
+            drawSelector();
 
 
 
@@ -203,7 +196,18 @@ public class InventoryState extends BaseSubState{
         batch.end();
     }
 
-    private Item getItemOnClick(){
+    protected void drawSelector(){
+        if(accessor.getSelectedItem()==null) {
+            batch.draw(selectorImage, selector.x, selector.y);
+        } else {
+            //selected item shall follow the mouse
+            accessor.getSelectedItem().setX(MyMouse.getMouse().x);
+            accessor.getSelectedItem().setY(MyMouse.getMouse().y);
+            accessor.getSelectedItem().render(batch);
+        }
+    }
+
+    protected Item getItemOnClick(){
         Log.print("Grabbing: " + texturedInventory[(int) index.x][(int) index.y].getItemID());
         //we have changed the contents of the current UI
         return texturedInventory[(int) index.x][(int) index.y];
@@ -211,50 +215,46 @@ public class InventoryState extends BaseSubState{
 
     @Override
     public void handleInput() {
+        handleMouse();
+    }
+
+    protected void handleMouse(){
         if(MyMouse.isPressed(MyMouse.LEFT)) {
-            //Log.print(getMouse().x+","+getMouse().y);
-            if (getMouse().x > getX() && getMouse().x < (getX() + Variables.INVENTORY_WIDTH) && getMouse().y > getY() && getMouse().y < (getY() + Variables.INVENTORY_HEIGHT)) {
-                //make sure were clicking on the right window
-                notifyDataSetChange();
-                if (PlayState.getSelectedItem() == null) {
+            Log.print(MyMouse.getMouse().x + "," + MyMouse.getMouse().y);
+            //don't remove items if we cannot put them somewhere
+            if(PlayState.getGSM().numberOfSubStates() > 1 && !PlayState.getPlayer().getIsPaused()){
+                if (MyMouse.getMouse().x > getX() && MyMouse.getMouse().x < (getX() + FRAME_WIDTH) && MyMouse.getMouse().y > getY() && MyMouse.getMouse().y < (getY() + FRAME_HEIGHT)) {
+                    //make sure were clicking on the right window
+                    notifyDataSetChange();
+                    if (accessor.getSelectedItem() == null) {
 
-                    //if no item selected then that mean our next click will be to get an item
-                    int id = getItemOnClick().getItemID();
-                    if(id != 0) {
-                        PlayState.setSelectedItem(getItemOnClick());
-                        inventoryManager.removeFromInventory(PlayState.getSelectedItem());
-                    }
-                } else {
-
-                    if (inventoryManager.getInventory()[(int) index.x][(int) index.y] == 0) {
-                        // adding to a blank space
-                        inventoryManager.addToInventory(PlayState.getSelectedItem(), (int) index.x, (int) index.y);
-                        PlayState.setSelectedItem(null);
+                        //if no item selected then that mean our next click will be to get an item
+                        int id = getItemOnClick().getItemID();
+                        if (id != 0) {
+                            accessor.setSelectedItem(getItemOnClick());
+                            inventoryManager.removeFromInventory(accessor.getSelectedItem());
+                        }
                     } else {
-                        // item swapping done here
-                        Item toSwap = texturedInventory[(int) index.x][(int) index.y];
-                        inventoryManager.addToInventory(PlayState.getSelectedItem(), (int) index.x, (int) index.y);
-                        PlayState.setSelectedItem(toSwap);
+
+                        if (inventoryManager.getInventory()[(int) index.x][(int) index.y] == 0) {
+                            // adding to a blank space
+                            inventoryManager.addToInventory(accessor.getSelectedItem(), (int) index.x, (int) index.y);
+                            accessor.setSelectedItem(null);
+                        } else {
+                            // item swapping done here
+                            Item toSwap = texturedInventory[(int) index.x][(int) index.y];
+                            inventoryManager.addToInventory(accessor.getSelectedItem(), (int) index.x, (int) index.y);
+                            accessor.setSelectedItem(toSwap);
+                        }
                     }
                 }
-            }
-        }
-
-        if(MyMouse.isPressed(MyMouse.MWHEEL_DOWN)){
-            if(index.x < texturedInventory[0].length) {
-                index.x += 1;
-            }
-        }
-        if(MyMouse.isPressed(MyMouse.MWHEEL_UP)){
-            if(index.x > 0) {
-                index.x -= 1;
             }
         }
     }
 
     @Override
     public void dispose() {
-        if(PlayState.getSelectedItem()!=null){
+        if(accessor.getSelectedItem()!=null){
             // if the item is never put in either player or back in the chest, the put it back in the chest
             //todo if the chest is full there will be a problem
             //inventoryManager.addToInventory(selectedItem);

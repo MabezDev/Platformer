@@ -21,7 +21,7 @@ public class Main extends ApplicationAdapter {
 		Variables.HEIGHT = Gdx.graphics.getHeight();
 		Camera = new OrthographicCamera(Variables.WIDTH,Variables.HEIGHT);
 		myGsm = new GameStateManager(Camera);
-		// do check for what os later
+		// do check for what os later ie have an android input processor if we get there
 		Gdx.input.setInputProcessor(new DesktopInputProccessor());
 	}
 
@@ -40,6 +40,6 @@ public class Main extends ApplicationAdapter {
 	@Override
 	public void dispose(){
 		myGsm.dispose();
-		//disposes the current states (thus saving data)
+		//disposes the current states ready for exit
 	}
 }

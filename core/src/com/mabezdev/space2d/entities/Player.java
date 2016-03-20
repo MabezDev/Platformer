@@ -12,6 +12,7 @@ import com.mabezdev.space2d.states.SubStates.BaseSubState;
 import com.mabezdev.space2d.states.SubStates.HotBarState;
 import com.mabezdev.space2d.states.SubStates.InventoryState;
 import com.mabezdev.space2d.states.SubStates.Paused;
+import com.mabezdev.space2d.tiles.items.Item;
 import com.mabezdev.space2d.util.FileLoader;
 import com.mabezdev.space2d.util.UniqueID;
 import com.mabezdev.space2d.world.InventoryManager;
@@ -33,6 +34,7 @@ public class Player extends Entity {
     private int pausedID;
     private InventoryManager bar;
     private int barID;
+    private static Item selectedItem;
 
 
     public Player(float x, float y){
@@ -119,6 +121,13 @@ public class Player extends Entity {
     }
 
 
+    public static Item getSelectedItem() {
+        return selectedItem;
+    }
+
+    public static void setSelectedItem(Item myselectedItem) {
+        selectedItem = myselectedItem;
+    }
 
     private void handleRetardation(){
         //handle retardation

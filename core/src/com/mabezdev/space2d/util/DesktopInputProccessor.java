@@ -57,9 +57,9 @@ public class DesktopInputProccessor implements InputProcessor {
     @Override
     public boolean scrolled(int amount) {
         if(amount == 1){
-            MyMouse.setKeyState(MyMouse.MWHEEL_UP,true);
-        } else if(amount == -1){
             MyMouse.setKeyState(MyMouse.MWHEEL_DOWN,true);
+        } else if(amount == -1){
+            MyMouse.setKeyState(MyMouse.MWHEEL_UP,true);
         } else {
             MyMouse.setKeyState(MyMouse.MWHEEL_UP,false);
             MyMouse.setKeyState(MyMouse.MWHEEL_DOWN,false);

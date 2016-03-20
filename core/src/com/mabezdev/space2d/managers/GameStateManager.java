@@ -81,6 +81,10 @@ public class GameStateManager {
         subStates.put(id,stateObject);
     }
 
+    public int numberOfSubStates(){
+        return subStates.size();
+    }
+
     public void removeSubState(int id){
         subStates.get(id).dispose();
         subStates.remove(id);

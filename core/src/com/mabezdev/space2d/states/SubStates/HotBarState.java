@@ -14,6 +14,7 @@ import com.mabezdev.space2d.tiles.items.Shovel;
 import com.mabezdev.space2d.tiles.items.Sword;
 import com.mabezdev.space2d.util.FileLoader;
 import com.mabezdev.space2d.util.Log;
+import com.mabezdev.space2d.util.MyMouse;
 import com.mabezdev.space2d.world.InventoryManager;
 
 /**
@@ -22,7 +23,7 @@ import com.mabezdev.space2d.world.InventoryManager;
 public class HotBarState extends InventoryState {
 
     public HotBarState(GameStateManager gsm, InventoryManager mng) {
-        super(gsm);
+        super(gsm);// these need to be changhed and should not be hard coded values
         Log.print("Opened item hot bar!");
         this.x = (PlayState.getGSM().getCamera().position.x - (Variables.INVENTORY_WIDTH / 2));
         this.y = 20;
@@ -31,35 +32,33 @@ public class HotBarState extends InventoryState {
         this.COLUMNS = inventoryManager.getColumns();
         this.WIDTH = GSManager.getCamera().viewportWidth;
         this.HEIGHT = GSManager.getCamera().viewportHeight;
+        this.FRAME_WIDTH = 128.0f;
+        this.FRAME_HEIGHT = 11.0f;
 
         ResourceManager.loadTexture("inventory","tilesets/hotbar.png");
         ResourceManager.loadTexture("selector","tilesets/selector.png");
 
         selector = new Vector2(Integer.MAX_VALUE,Integer.MAX_VALUE);
-        index = new Vector2(4,0);
         itemSet = ResourceManager.getTexture("items");//load the item set in
         frame = new TextureRegion(ResourceManager.getTexture("inventory"));
         selectorImage = new TextureRegion(ResourceManager.getTexture("selector"));
         batch = PlayState.getSpriteBatch();
 
         this.accessor = PlayState.getPlayer();
-    }
 
-    public void notifyDataSetHasChanged(){
-        dataSetHasChanged = true;
     }
 
     @Override
     public void update(float dt) {
         if(dataSetHasChanged){
             Log.print("Generating");
-            //refresh inventory
-            inventoryManager.refreshData();
+            //save inventory
+            inventoryManager.saveInventory();
             //gen textures
             texturedInventory = generateTextured(inventoryManager.getInventory());
             Log.print(texturedInventory.length);
-            //save inventory
-            inventoryManager.saveInventory();
+            //refresh inventory
+            inventoryManager.refreshData();
             //set set up for next notification
             dataSetHasChanged = false;
         }
@@ -71,7 +70,29 @@ public class HotBarState extends InventoryState {
                 texturedInventory[i][j].setY((this.y + gap) + (i*(Variables.ITEMTILEHEIGHT + gap)));
             }
         }
+        this.handleMouse();
+        this.updateCursor();
+        this.updateScrollWheel();
     }
+
+    private void updateScrollWheel(){
+        if(MyMouse.isPressed(MyMouse.MWHEEL_DOWN)){
+            if(index.y < texturedInventory[0].length - 1) {
+                index.y += 1;
+            }
+        }
+        if(MyMouse.isPressed(MyMouse.MWHEEL_UP)){
+            if(index.y > 0) {
+                index.y -= 1;
+            }
+        }
+    }
+
+    public Item getSelectedHotBarItem(){
+        return texturedInventory[(int)index.x][(int)index.y];
+    }
+
+
 
     @Override
     public void render() {
@@ -83,6 +104,7 @@ public class HotBarState extends InventoryState {
                     texturedInventory[i][j].render(batch);
                 }
             }
+            this.drawSelector();
         }
         batch.end();
     }
