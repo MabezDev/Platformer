@@ -1,20 +1,30 @@
 package com.mabezdev.space2d.entities;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mabezdev.space2d.managers.ResourceManager;
 
 /**
  * Created by Mabez on 20/03/2016.
  */
-public class Enemy extends Player {
+public class Enemy extends Players {
+
+    private Texture image;
 
     public Enemy(float x, float y, int health) {
-        super(x, y, health);
-        
+        this.currentHealth = health;
+        this.maxHealth = health;
+        this.x = x;
+        this.y = y;
+
+        ResourceManager.loadTexture("enemy","tilesets/playerset.png");
+
+        image = ResourceManager.getTexture("enemy");
     }
 
     @Override
     public void render(SpriteBatch sb) {
-
+        sb.draw(image,x,y);
     }
 
     @Override

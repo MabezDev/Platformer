@@ -21,7 +21,7 @@ import com.mabezdev.space2d.world.InventoryManager;
 /**
  * Created by Mabez on 14/12/2015.
  */
-public class Player extends Entity {
+public class Player extends Players {
 
     private TextureRegion playerImage;
     private boolean Action;

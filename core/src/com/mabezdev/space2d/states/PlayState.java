@@ -36,7 +36,7 @@ public class PlayState extends BaseState {
     private static float WORLD_HEIGHT;
     private static Tile[][] world;
     private static ArrayList<Entity> entities;
-    private static ArrayList<Entity> players;
+    private static ArrayList<Players> players;
     private static Player player;
     private static final float cameraLerp = 0.1f;
     private boolean isPaused;
@@ -54,7 +54,7 @@ public class PlayState extends BaseState {
         sb = new SpriteBatch();
         camera = GSManager.getCamera();
         entities = new ArrayList<Entity>();
-        players = new ArrayList<Entity>();
+        players = new ArrayList<Players>();
         player = new Player(0,0,20);
         Enemy player2 = new Enemy(20,20,20);
         //set to ortho to scale down the player view
@@ -132,6 +132,10 @@ public class PlayState extends BaseState {
                     }
                 }
             }
+        }
+
+        for(Players p : players){
+
         }
 
         updateCamera();
