@@ -39,7 +39,7 @@ public abstract class Tile {
 
     //only the tile can decide whether is is solid or not,
     //might have to make this public for things like doors, where is can and cannot be solid
-    protected void setSolid(boolean b){
+    public void setSolid(boolean b){
         isSolid = b;
     }
 

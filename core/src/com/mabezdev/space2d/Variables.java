@@ -12,7 +12,7 @@ public class Variables {
     public static final float ITEMTILEHEIGHT = 8;
     public static final float ITEMTILEWIDTH = 8;
     public static final float FPS = 60;
-    public static final String NAME = "SPACE2D";
+    public static final String NAME = "RANDOM RPG";
     public static float WORLD_HEIGHT;
     public static float WORLD_WIDTH;
     public static int WORLD_ROWS;

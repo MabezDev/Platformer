@@ -55,7 +55,7 @@ public class PlayState extends BaseState {
         camera = GSManager.getCamera();
         entities = new ArrayList<Entity>();
         players = new ArrayList<Players>();
-        player = new Player(0,0,20);
+        player = new Player(20,40,20);
         Enemy player2 = new Enemy(20,20,20);
         //set to ortho to scale down the player view
         camera.setToOrtho(false, Variables.WIDTH*unitScale, Variables.HEIGHT*unitScale);
@@ -153,6 +153,12 @@ public class PlayState extends BaseState {
         return nearestX;
     }
 
+    public static Tile getTileFromCoordinates(float x, float y){
+        int nearestX = (int)(Math.floor((x/Variables.TILEWIDTH))) + 1;
+        int nearestY = (int) (Math.floor((y/Variables.TILEHEIGHT))) + 1;
+        return world[nearestY][nearestX];
+    }
+
     public static int getRowOfEntity(Entity e){
         float y =  e.getY() - e.ENTITY_HEIGHT/2;
         int nearestY = (int) (Math.floor((y/Variables.TILEHEIGHT))) + 1;
@@ -161,6 +167,17 @@ public class PlayState extends BaseState {
 
     public static Tile getTile(int x,int y){
         return world[x][y];
+    }
+
+    public static int[] getTilePosition(Tile tile){
+        for(int i=0; i < world.length; i++){
+            for (int j = 0; j < world[0].length; j++) {
+                if(world[i][j]==tile){
+                    return new int[] {i,j};
+                }
+            }
+        }
+        return null;
     }
 
     private void updateCamera(){

@@ -219,7 +219,7 @@ public class Player extends Players {
                 this.move(Direction.DOWN);
             }
         }
-        if(Gdx.input.isKeyJustPressed(Input.Keys.I)){
+        if(Gdx.input.isKeyJustPressed(Input.Keys.E)){
                 setInventory(!Inventory);
         }
         if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
