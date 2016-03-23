@@ -18,11 +18,15 @@ public abstract class Entity {
     protected static float DEFAULT_SPEED;
     protected static float  DEFAULT_RETARDATION ;
     protected static float  DEFAULT_ACCELERATION;
+
     public static float  ENTITY_WIDTH;
     public static float  ENTITY_HEIGHT;
     public static String NAME;
 
-    private Tile currentTile;
+    public static final String STATIC = "STATIC_ENTITY";
+    public static final String NORMAL = "NORMAL_ENTITY";
+
+    protected Tile currentTile;
     private float tempX;
     private float tempY;
 
@@ -40,14 +44,23 @@ public abstract class Entity {
         DOWN
     }
 
-    protected void removeHealth(int amount){
+    public Tile getCurrentTile(){
+        return currentTile;
+    }
+
+    public void removeHealth(int amount){
         currentHealth -= amount;
         if(currentHealth <= 0){
             isDead = true;
         }
     }
 
-    protected boolean isDead(){
+    public String getType(){
+        return NORMAL;
+    }
+
+
+    public boolean isDead(){
         return isDead;
     }
 

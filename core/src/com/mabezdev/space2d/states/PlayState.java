@@ -13,7 +13,6 @@ import com.mabezdev.space2d.util.FileLoader;
 import com.mabezdev.space2d.util.Log;
 import com.mabezdev.space2d.world.MapLoader;
 import com.mabezdev.space2d.world.MapGenerator;
-import org.ietf.jgss.GSSManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -56,7 +55,7 @@ public class PlayState extends BaseState {
         entities = new ArrayList<Entity>();
         players = new ArrayList<Players>();
         player = new Player(20,40,20);
-        Enemy player2 = new Enemy(20,20,20);
+        Enemy player2 = new Enemy(15,15,20);
         //set to ortho to scale down the player view
         camera.setToOrtho(false, Variables.WIDTH*unitScale, Variables.HEIGHT*unitScale);
         //Get the map into memory!
@@ -77,7 +76,7 @@ public class PlayState extends BaseState {
         Chest myChest2 = new Chest(1*Variables.TILEWIDTH,1*Variables.TILEHEIGHT, Chest.chestState.CLOSED);
         entities.add(myChest2);
         players.add(player);
-        //players.add(player2);
+        players.add(player2);
     }
 
 
@@ -119,7 +118,7 @@ public class PlayState extends BaseState {
         Enemeis should just be giving data to the playstate not taking in any input from our client
         Eventually they will be streamed data coming from other clients
          */
-        for (int j = 0; j < players.size(); j++){
+        /*for (int j = 0; j < players.size(); j++){
             //update all entities
             Tile currentTile = world[getRowOfEntity(players.get(j))][getColumnOfEntity(players.get(j))];
             players.get(j).setCurrentTile(currentTile);
@@ -138,9 +137,38 @@ public class PlayState extends BaseState {
                     }
                 }
             }
-        }
+        }*/
 
         for(Players p : players){
+            p.update(dt);
+            if(p.equals(player)){
+                Player mainPlayer = (Player) p;
+                mainPlayer.handleInput();
+            } else {
+                //check player attacks
+                Log.print("Player: ("+player.getCurrentTile().getX()+","+player.getCurrentTile().getY());
+                Log.print("Enemy: ("+p.getCurrentTile().getX()+","+p.getCurrentTile().getY());
+                if(player.getCurrentTile().equals(p.getCurrentTile())){
+                    Log.print("In same tile");
+                    if(player.isAttacking()){
+                        p.removeHealth(player.getAttackDamage());
+                        Log.print("Hitting player for "+player.getAttackDamage()+" damage.");
+                    }
+                }
+            }
+
+            for(Entity e : entities){
+                e.update(dt);
+                if(e.getType().equals(Entity.STATIC)){
+                    StaticEntity s = (StaticEntity) e;
+                    if(s.getCurrentTile().equals(p.getCurrentTile())){
+                        if(player.getAction()){
+                            s.doAction();
+                        }
+                    }
+                }
+            }
+
 
         }
 

@@ -1,8 +1,10 @@
 package com.mabezdev.space2d.world;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mabezdev.space2d.Variables;
 import com.mabezdev.space2d.tiles.DirtTile;
+import com.mabezdev.space2d.tiles.Sky;
 import com.mabezdev.space2d.tiles.StoneTile;
 import com.mabezdev.space2d.tiles.Tile;
 import com.mabezdev.space2d.util.FileLoader;
@@ -29,7 +31,7 @@ public class MapLoader {
     //Tile type with id's setups
     private enum TILES{
 
-        GRASS(0),
+        SKY(0),
         DIRT(1),
         STONE(2);
 
@@ -58,6 +60,9 @@ public class MapLoader {
                 int tile = GRID[i][j];
                 //choose tile based on ID
                 //improve efficiency by loadng one of each object then reusing it instead of a new object for each tile?
+                if(tile == TILES.SKY.getId()){
+                    tempTiles[i][j] = new Sky(j* Variables.TILEWIDTH,i*Variables.TILEHEIGHT,Variables.TILEWIDTH,Variables.TILEHEIGHT,TILES.SKY.getId());
+                }
                 if(tile == TILES.DIRT.getId()){
                     tempTiles[i][j] = new DirtTile(j* Variables.TILEWIDTH,i*Variables.TILEHEIGHT,Variables.TILEWIDTH,Variables.TILEHEIGHT,TILES.DIRT.getId());
                 }

@@ -24,6 +24,12 @@ public abstract class StaticEntity extends Entity {
     }
 
     @Override
+    public String getType(){
+        return STATIC;
+    }
+
+
+    @Override
     public void move(Direction direction){
 
     }

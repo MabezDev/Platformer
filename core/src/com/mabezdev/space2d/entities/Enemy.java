@@ -3,6 +3,7 @@ package com.mabezdev.space2d.entities;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mabezdev.space2d.managers.ResourceManager;
+import com.mabezdev.space2d.states.PlayState;
 
 /**
  * Created by Mabez on 20/03/2016.
@@ -29,5 +30,6 @@ public class Enemy extends Players {
 
     @Override
     public void update(float dt) {
+        currentTile = PlayState.getTileFromCoordinates(x,y);
     }
 }

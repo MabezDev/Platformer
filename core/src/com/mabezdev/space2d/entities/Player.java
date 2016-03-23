@@ -87,20 +87,30 @@ public class Player extends Players {
             } else {
                 sb.draw(hotBarState.getSelectedHotBarItem().getTileImage(), x + 16, y + 16, Variables.GAME_ITEM_SIZE, Variables.GAME_ITEM_SIZE);
             }
+        } else {
         }
 
     }
 
+    public int getAttackDamage(){
+        if(hotBarState.getSelectedHotBarItem()!=null){
+            return hotBarState.getSelectedHotBarItem().getDamage();
+        } else {
+            return 0;
+        }
+    }
+
     @Override
     public void update(float dt) {
-        //collect user input
-        this.handleInput();
         //handle collisions with solid tiles
         this.handleCollisions(dt);
         //handle map bounds
         this.handleMapBoundaries(dt);
         //decelerate player with drag
         this.handleRetardation();
+
+
+        currentTile = PlayState.getTileFromCoordinates(x,y);
 
         if(isAttacking){
             if(attackTimer > attackDuration){
@@ -199,7 +209,7 @@ public class Player extends Players {
 
 
 
-    private void handleInput(){
+    public void handleInput(){
         if(canAttack){
             if(MyMouse.isPressed(MyMouse.LEFT)){
                 attack();

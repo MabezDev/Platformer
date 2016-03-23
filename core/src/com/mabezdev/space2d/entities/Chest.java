@@ -51,6 +51,7 @@ public class Chest extends StaticEntity {
         setState(initial);
         inventoryID = 20000;
         playerInventoryID = 20000;
+        currentTile = PlayState.getTileFromCoordinates(x,y);
     }
 
 
