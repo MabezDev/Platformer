@@ -163,13 +163,24 @@ public abstract class Entity {
         Tile next = null;
 
         float xOffset = -ENTITY_WIDTH/2;
-        float yOffset = -ENTITY_HEIGHT/2;
+        float yOffset = -ENTITY_HEIGHT;
 
-        next = PlayState.getTileFromCoordinates(tempX + xOffset,tempY +yOffset);
+        if(tempX < x){
+            xOffset = -ENTITY_WIDTH;
+        }
+        if(tempY > y){
+            yOffset = 0;
+        }
 
-        if(next.isSolid()){
-            //Don't update the position if it is invalid to do so.
-        } else {
+        next = PlayState.getTileFromCoordinates(tempX + xOffset,tempY+ yOffset);
+
+        //Tile[] clipped = PlayState.getTilesClippedByBounds(this.getBounds());
+        //int[] xy = PlayState.getTilePosition(next);
+        //System.out.println("Next Tile (x,y) : ("+xy[0]+","+xy[1]+")"+ " Solid: "+next.isSolid());
+
+
+
+        if(!next.isSolid()){ //Don't update the position if it is invalid to do so.
             y = tempY;
             x = tempX;
         }

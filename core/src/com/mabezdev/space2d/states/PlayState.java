@@ -3,6 +3,8 @@ package com.mabezdev.space2d.states;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
+
 import com.mabezdev.space2d.Variables;
 import com.mabezdev.space2d.entities.*;
 import com.mabezdev.space2d.managers.GameStateManager;
@@ -146,8 +148,8 @@ public class PlayState extends BaseState {
                 mainPlayer.handleInput();
             } else {
                 //check player attacks
-                Log.print("Player: ("+player.getCurrentTile().getX()+","+player.getCurrentTile().getY());
-                Log.print("Enemy: ("+p.getCurrentTile().getX()+","+p.getCurrentTile().getY());
+                //Log.print("Player: ("+player.getCurrentTile().getX()+","+player.getCurrentTile().getY());
+                //Log.print("Enemy: ("+p.getCurrentTile().getX()+","+p.getCurrentTile().getY());
                 if(player.getCurrentTile().equals(p.getCurrentTile())){
                     Log.print("In same tile");
                     if(player.isAttacking()){
@@ -193,6 +195,13 @@ public class PlayState extends BaseState {
         return nearestY;
     }
 
+    public static Tile[] getTilesClippedByBounds(Rectangle bounds){
+        ArrayList<Tile> tiles = new ArrayList<Tile>();
+        tiles.add(getTileFromCoordinates(bounds.getX(),bounds.getY()));
+        tiles.add(getTileFromCoordinates(bounds.getX()+bounds.getWidth(),bounds.getY()+bounds.getHeight()));
+        return tiles.toArray(new Tile[tiles.size()]);
+    }
+
     public static Tile getTile(int x,int y){
         return world[x][y];
     }
@@ -201,7 +210,7 @@ public class PlayState extends BaseState {
         for(int i=0; i < world.length; i++){
             for (int j = 0; j < world[0].length; j++) {
                 if(world[i][j]==tile){
-                    return new int[] {i,j};
+                    return new int[] {j,i}; //j is x, i is y
                 }
             }
         }
