@@ -1,13 +1,11 @@
 package com.mabezdev.space2d.entities;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mabezdev.space2d.Variables;
 import com.mabezdev.space2d.managers.GameStateManager;
 import com.mabezdev.space2d.managers.ResourceManager;
 import com.mabezdev.space2d.states.PlayState;
-import com.mabezdev.space2d.states.SubStates.BaseSubState;
 import com.mabezdev.space2d.states.SubStates.InventoryState;
 import com.mabezdev.space2d.util.FileLoader;
 import com.mabezdev.space2d.util.Log;
@@ -35,8 +33,8 @@ public class Chest extends StaticEntity {
     }
 
     public Chest(float x, float y,chestState initial){
-        this.ENTITY_WIDTH = Variables.TILEWIDTH;
-        this.ENTITY_HEIGHT = Variables.TILEHEIGHT;
+        this.ENTITY_WIDTH = Variables.TILE_WIDTH;
+        this.ENTITY_HEIGHT = Variables.TILE_HEIGHT;
         this.NAME = "CHEST";
 
         this.x = x;
@@ -51,7 +49,7 @@ public class Chest extends StaticEntity {
         setState(initial);
         inventoryID = 20000;
         playerInventoryID = 20000;
-        currentTile = PlayState.getTileFromCoordinates(x,y);
+        currentTile = PlayState.getTileFromBounds(getBounds());
     }
 
 

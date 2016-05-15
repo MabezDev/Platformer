@@ -39,6 +39,7 @@ public class Player extends Players {
     private HotBarState hotBarState;
     private boolean canAttack;
     private boolean isAttacking;
+    private boolean hasAttacked;
 
     private float attackTimer = 0f;
     private float attackDuration = .3f;
@@ -73,8 +74,8 @@ public class Player extends Players {
         pausedID = 200000;
     }
 
-    public boolean isAttacking(){
-        return isAttacking;
+    public boolean hasAttacked(){
+        return hasAttacked;
     }
 
     @Override
@@ -88,6 +89,7 @@ public class Player extends Players {
                 sb.draw(hotBarState.getSelectedHotBarItem().getTileImage(), x + 16, y + 16, Variables.GAME_ITEM_SIZE, Variables.GAME_ITEM_SIZE);
             }
         } else {
+            //atm do nothing
         }
 
     }
@@ -100,6 +102,10 @@ public class Player extends Players {
         }
     }
 
+    public void resetAttack(){
+        hasAttacked = false;
+    }
+
     @Override
     public void update(float dt) {
         //handle collisions with solid tiles
@@ -110,12 +116,13 @@ public class Player extends Players {
         this.handleRetardation();
 
 
-        currentTile = PlayState.getTileFromCoordinates(x,y);
+        currentTile = PlayState.getTileFromBounds(getBounds());
 
         if(isAttacking){
             if(attackTimer > attackDuration){
                 attackTimer = 0;
                 isAttacking = false;
+                hasAttacked = true; //this tells the playstate we have just attacked and this should be set to false by the playstate
             } else {
                 attackTimer += dt;
             }

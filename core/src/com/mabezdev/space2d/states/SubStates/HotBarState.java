@@ -7,7 +7,6 @@ import com.mabezdev.space2d.Variables;
 import com.mabezdev.space2d.managers.GameStateManager;
 import com.mabezdev.space2d.managers.ResourceManager;
 import com.mabezdev.space2d.states.PlayState;
-import com.mabezdev.space2d.tiles.items.Item;
 import com.mabezdev.space2d.tiles.items.Weapon;
 import com.mabezdev.space2d.util.Log;
 import com.mabezdev.space2d.util.MyMouse;
@@ -61,8 +60,8 @@ public class HotBarState extends InventoryState {
         this.y = (PlayState.getGSM().getCamera().position.y - (PlayState.getGSM().getCamera().viewportHeight/2 - 2));
         for(int i=0; i<ROWS;i++){
             for(int j=0; j < COLUMNS; j++){
-                texturedInventory[i][j].setX((this.x  + gap) + (j* (Variables.ITEMTILEWIDTH + gap)));
-                texturedInventory[i][j].setY((this.y + gap) + (i*(Variables.ITEMTILEHEIGHT + gap)));
+                texturedInventory[i][j].setX((this.x  + gap) + (j* (Variables.ITEM_TILE_WIDTH + gap)));
+                texturedInventory[i][j].setY((this.y + gap) + (i*(Variables.ITEM_TILE_HEIGHT + gap)));
             }
         }
         this.handleMouse();

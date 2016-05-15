@@ -1,0 +1,10 @@
+
+    Todo:
+
+        - Rework combat system by added an events based system.
+            - Will need an event dispatcher
+            - Do clients send events or does the Game listen for them and then dispatch other events accordingly?
+                -I.e, How do we dispatch and receive player attacks etc
+            - check valid attack on client(the sword hits or something), send our attack request to event manager,
+              manager processes checks validity and sends the event to the other client
+        - Transition into 2D Scroller.

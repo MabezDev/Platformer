@@ -1,14 +1,9 @@
 package com.mabezdev.space2d.states.SubStates;
 
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.mabezdev.space2d.Variables;
 import com.mabezdev.space2d.entities.Player;
 import com.mabezdev.space2d.managers.GameStateManager;
@@ -51,8 +46,8 @@ public class InventoryState extends BaseSubState{
     protected boolean dataSetHasChanged = true;
 
     public enum Items {
-        EMPTY(0,0,0),
-        SHOVEL(1,1f,2),
+        EMPTY(0),
+        SHOVEL(1),
         SWORD(2,.2f,5);
 
         private int itemID;
@@ -63,6 +58,10 @@ public class InventoryState extends BaseSubState{
             this.itemID = itemID;
             this.attackTime = attackTime;
             this.damage = damage;
+        }
+
+        Items(int itemID){
+            this.itemID = itemID;
         }
     }
 
@@ -108,14 +107,13 @@ public class InventoryState extends BaseSubState{
         for(int i = 0;i < ROWS; i++){
             for(int j = 0;j < COLUMNS;j++){
                 if(inventory[i][j] == Items.SHOVEL.itemID){
-                    temp[i][j] = new Shovel((this.x  + gap) + (j* (Variables.ITEMTILEWIDTH + gap)), (this.y + gap) + (i*(Variables.ITEMTILEHEIGHT + gap)) ,Items.SHOVEL.itemID,loadedTextures[Items.SHOVEL.itemID],
-                            Items.SHOVEL.attackTime, Items.SHOVEL.damage);
+                    temp[i][j] = new Shovel((this.x  + gap) + (j* (Variables.ITEM_TILE_WIDTH + gap)), (this.y + gap) + (i*(Variables.ITEM_TILE_HEIGHT + gap)) ,Items.SHOVEL.itemID,loadedTextures[Items.SHOVEL.itemID]);
                 }
                 if(inventory[i][j] == Items.EMPTY.itemID){
-                    temp[i][j] = new Empty((this.x  + gap) + (j* (Variables.ITEMTILEWIDTH + gap)), (this.y + gap) + (i*(Variables.ITEMTILEHEIGHT + gap)) ,Items.EMPTY.itemID,loadedTextures[Items.EMPTY.itemID]);
+                    temp[i][j] = new Empty((this.x  + gap) + (j* (Variables.ITEM_TILE_WIDTH + gap)), (this.y + gap) + (i*(Variables.ITEM_TILE_HEIGHT + gap)) ,Items.EMPTY.itemID,loadedTextures[Items.EMPTY.itemID]);
                 }
                 if(inventory[i][j] == Items.SWORD.itemID){
-                    temp[i][j] = new Sword((this.x  + gap) + (j* (Variables.ITEMTILEWIDTH + gap) ), (this.y + gap) + (i*(Variables.ITEMTILEHEIGHT + gap)) ,Items.SWORD.itemID,loadedTextures[Items.SWORD.itemID],
+                    temp[i][j] = new Sword((this.x  + gap) + (j* (Variables.ITEM_TILE_WIDTH + gap) ), (this.y + gap) + (i*(Variables.ITEM_TILE_HEIGHT + gap)) ,Items.SWORD.itemID,loadedTextures[Items.SWORD.itemID],
                             Items.SWORD.attackTime,Items.SWORD.damage);
                 }
                 temp[i][j].setRow(i);

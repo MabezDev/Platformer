@@ -10,6 +10,7 @@ import java.io.IOException;
 public class MapGenerator {
 
     //filler class currently
+    //will generate random worlds?
 
     private static String[] lines = new String[5];
     private static BufferedWriter myWriter;

@@ -1,12 +1,17 @@
 package com.mabezdev.space2d.tiles.items;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mabezdev.space2d.Variables;
 
 /**
- * Created by Mabez on 19/12/2015.
+ * Created by Mabez on 15/05/2016.
  */
-public class Empty extends Item {
+public class UtilityItem extends Item {
+
+    public UtilityItem(float x, float y, int itemID, TextureRegion tileImage) {
+        super(x, y, itemID, tileImage);
+    }
 
     @Override
     public void update(float dt) {
@@ -18,13 +23,8 @@ public class Empty extends Item {
 
     }
 
-    public Empty(float x, float y, int itemID, TextureRegion image) {
-        super(x, y, itemID,image);
-    }
-
     @Override
-    public String getItemType(){
+    public String getItemType() {
         return Variables.ITEM_UTILITY;
     }
-
 }

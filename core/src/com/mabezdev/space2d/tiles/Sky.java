@@ -22,11 +22,11 @@ public class Sky extends Tile {
     }
     @Override
     public void render(SpriteBatch sb) {
-        sb.begin();
+        /*sb.begin();
         {
             //sb.draw();
         }
-        sb.end();
+        sb.end();*/
     }
 
     @Override

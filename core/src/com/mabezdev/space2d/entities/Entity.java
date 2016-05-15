@@ -160,7 +160,14 @@ public abstract class Entity {
         Optimized the collision handling but it still doesn't look how I want it too.
          */
 
-        Tile next = null;
+        /*
+        Todo: Change this whole algorithm as we need it to work like a 2D platformer
+         */
+
+        x = tempX;
+        y = tempY;
+
+        /*Tile next = null;
 
         float xOffset = -ENTITY_WIDTH/2;
         float yOffset = -ENTITY_HEIGHT;
@@ -184,6 +191,7 @@ public abstract class Entity {
             y = tempY;
             x = tempX;
         }
+        */
 
     }
     public abstract void render(SpriteBatch sb);

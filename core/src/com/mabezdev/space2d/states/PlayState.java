@@ -10,13 +10,11 @@ import com.mabezdev.space2d.entities.*;
 import com.mabezdev.space2d.managers.GameStateManager;
 import com.mabezdev.space2d.managers.ResourceManager;
 import com.mabezdev.space2d.tiles.Tile;
-import com.mabezdev.space2d.tiles.items.Item;
 import com.mabezdev.space2d.util.FileLoader;
 import com.mabezdev.space2d.util.Log;
 import com.mabezdev.space2d.world.MapLoader;
 import com.mabezdev.space2d.world.MapGenerator;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -54,16 +52,17 @@ public class PlayState extends BaseState {
 
         sb = new SpriteBatch();
         camera = GSManager.getCamera();
+
+        //set to ortho to scale down the player view
+        camera.setToOrtho(false, Variables.WIDTH*unitScale, Variables.HEIGHT*unitScale);
         entities = new ArrayList<Entity>();
         players = new ArrayList<Players>();
         player = new Player(20,40,20);
-        Enemy player2 = new Enemy(15,15,20);
-        //set to ortho to scale down the player view
-        camera.setToOrtho(false, Variables.WIDTH*unitScale, Variables.HEIGHT*unitScale);
+        Enemy player2 = new Enemy(20,40,20);
         //Get the map into memory!
         world = loadMap();
-        WORLD_WIDTH = COLUMNS * Variables.TILEWIDTH;
-        WORLD_HEIGHT = ROWS * Variables.TILEHEIGHT;
+        WORLD_WIDTH = COLUMNS * Variables.TILE_WIDTH;
+        WORLD_HEIGHT = ROWS * Variables.TILE_HEIGHT;
 
         Variables.GAME_CAMERA_VIEWPORT_HEIGHT = camera.viewportHeight;
         Variables.GAME_CAMERA_VIEWPORT_WIDTH = camera.viewportWidth;
@@ -75,7 +74,7 @@ public class PlayState extends BaseState {
 
         hudCamera = new OrthographicCamera(Variables.GAME_CAMERA_VIEWPORT_WIDTH,Variables.GAME_CAMERA_VIEWPORT_HEIGHT);
 
-        Chest myChest2 = new Chest(1*Variables.TILEWIDTH,1*Variables.TILEHEIGHT, Chest.chestState.CLOSED);
+        Chest myChest2 = new Chest(1*Variables.TILE_WIDTH,1*Variables.TILE_HEIGHT, Chest.chestState.CLOSED);
         entities.add(myChest2);
         players.add(player);
         players.add(player2);
@@ -97,12 +96,13 @@ public class PlayState extends BaseState {
     }
 
     private Tile[][] loadMap(){
-        try {
+        //uncomment to rewrite the default to the file
+        /*try {
             mapGenerator = new MapGenerator(worldFile);
             mapGenerator.generateFile();
         }catch (IOException e){
             Log.print(e.toString());
-        }
+        }*/
         mapLoader = new MapLoader(new FileLoader(worldFile));
         ROWS = mapLoader.getRows();
         COLUMNS = mapLoader.getColumns();
@@ -111,7 +111,7 @@ public class PlayState extends BaseState {
 
     public static OrthographicCamera getHudCamera(){
         return hudCamera;
-    }
+    } // this should be passed to all substates?
 
     @Override
     public void update(float dt) {
@@ -140,21 +140,31 @@ public class PlayState extends BaseState {
                 }
             }
         }*/
-
+        ArrayList toRemove = new ArrayList();
         for(Players p : players){
             p.update(dt);
             if(p.equals(player)){
-                Player mainPlayer = (Player) p;
-                mainPlayer.handleInput();
+                player.handleInput();
             } else {
                 //check player attacks
                 //Log.print("Player: ("+player.getCurrentTile().getX()+","+player.getCurrentTile().getY());
                 //Log.print("Enemy: ("+p.getCurrentTile().getX()+","+p.getCurrentTile().getY());
-                if(player.getCurrentTile().equals(p.getCurrentTile())){
-                    Log.print("In same tile");
-                    if(player.isAttacking()){
+                int[] playerPos =  getTilePosition(player.getCurrentTile());
+                int[] otherPos =  getTilePosition(p.getCurrentTile());
+                /*Log.print("player tile: ");
+                Log.print(playerPos);
+                Log.print("other tile: ");
+                Log.print(otherPos);*/
+                if(playerPos[0] == otherPos[0] && playerPos[1] == otherPos[1]){
+                    if(player.hasAttacked()){
                         p.removeHealth(player.getAttackDamage());
+                        player.resetAttack();
                         Log.print("Hitting player for "+player.getAttackDamage()+" damage.");
+                        Log.print("Other player is dead : "+p.isDead());
+
+                        if(p.isDead()){
+                            toRemove.add(p);
+                        }
                     }
                 }
             }
@@ -173,33 +183,27 @@ public class PlayState extends BaseState {
 
 
         }
+        players.removeAll(toRemove);
 
         updateCamera();
     }
 
     public static int getColumnOfEntity(Entity e){
         float x =  e.getX() - e.ENTITY_WIDTH/2;
-        int nearestX = (int)(Math.floor((x/Variables.TILEWIDTH))) + 1;
+        int nearestX = (int)(Math.floor((x/Variables.TILE_WIDTH))) + 1;
         return nearestX;
     }
 
-    public static Tile getTileFromCoordinates(float x, float y){
-        int nearestX = (int)(Math.floor((x/Variables.TILEWIDTH))) + 1;
-        int nearestY = (int) (Math.floor((y/Variables.TILEHEIGHT))) + 1;
+    public static Tile getTileFromBounds(Rectangle r){
+        int nearestX = (int)(Math.floor((r.getX()/Variables.TILE_WIDTH))) + 1;
+        int nearestY = (int) (Math.floor((r.getY()/Variables.TILE_HEIGHT))) + 1;
         return world[nearestY][nearestX];
     }
 
     public static int getRowOfEntity(Entity e){
         float y =  e.getY() - e.ENTITY_HEIGHT/2;
-        int nearestY = (int) (Math.floor((y/Variables.TILEHEIGHT))) + 1;
+        int nearestY = (int) (Math.floor((y/Variables.TILE_HEIGHT))) + 1;
         return nearestY;
-    }
-
-    public static Tile[] getTilesClippedByBounds(Rectangle bounds){
-        ArrayList<Tile> tiles = new ArrayList<Tile>();
-        tiles.add(getTileFromCoordinates(bounds.getX(),bounds.getY()));
-        tiles.add(getTileFromCoordinates(bounds.getX()+bounds.getWidth(),bounds.getY()+bounds.getHeight()));
-        return tiles.toArray(new Tile[tiles.size()]);
     }
 
     public static Tile getTile(int x,int y){
@@ -216,6 +220,8 @@ public class PlayState extends BaseState {
         }
         return null;
     }
+
+
 
     private void updateCamera(){
         float newPosx = player.getX() + (player.ENTITY_WIDTH/2);

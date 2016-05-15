@@ -12,8 +12,8 @@ public abstract class Item extends Tile {
 
     private int itemID;
     protected TextureRegion tileImage;
-    protected static final float WIDTH = Variables.ITEMTILEWIDTH;
-    protected static final float HEIGHT = Variables.ITEMTILEHEIGHT;
+    protected static final float WIDTH = Variables.ITEM_TILE_WIDTH;
+    protected static final float HEIGHT = Variables.ITEM_TILE_HEIGHT;
     protected int ROW;
     protected int COLUMN;
 
